@@ -1,0 +1,124 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+#player {
+  height: 100vh;
+  background: #060a3d; }
+  #player .header {
+    text-align: center; }
+    #player .header h1 {
+      color: #fff;
+      font-size: 20px;
+      padding-top: 20px; }
+    #player .header p {
+      color: #868aaf;
+      font-size: 12px; }
+
+.area-effect .effect {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh; }
+  .area-effect .effect > div {
+    background-size: contain;
+    position: absolute; }
+  .area-effect .effect .effect-1 {
+    background: url("/effect-no-move.e6a51026.svg") 0 0 no-repeat;
+    width: 70vw;
+    height: 70vw;
+    animation: rotate1 20s linear infinite; }
+  .area-effect .effect .effect-2 {
+    background: url("/effect-move1.8d0ce205.svg") 0 0 no-repeat;
+    width: 60vw;
+    height: 60vw;
+    animation: rotate1 10s linear infinite reverse; }
+  .area-effect .effect .effect-3 {
+    background: url("/effect-move2.143040a0.svg") 0 0 no-repeat;
+    width: 24vw;
+    height: 24vw;
+    animation: rotate1 10s linear infinite; }
+
+.area-effect .balls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; }
+  .area-effect .balls span {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background: #6a134f;
+    border-radius: 50%;
+    margin: 0 4px; }
+    .area-effect .balls span.current {
+      width: 8px;
+      height: 8px;
+      background: #db3baa; }
+
+.area-effect .lyric {
+  text-align: center; }
+  .area-effect .lyric p {
+    font-size: 13px;
+    color: #868aaf;
+    margin-top: 10px; }
+    .area-effect .lyric p.current {
+      color: #fff; }
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  .buttons svg {
+    width: 24px;
+    height: 24px;
+    margin: 0 20px;
+    margin-top: 20px; }
+
+.bar-area {
+  color: #868aaf;
+  font-size: 12px;
+  display: flex;
+  padding: 0 20px;
+  margin-top: 20px;
+  align-items: center; }
+  .bar-area .time-start {
+    order: 1;
+    width: 40px; }
+  .bar-area .time-end {
+    order: 3;
+    width: 40px; }
+  .bar-area .bar {
+    order: 2;
+    flex: 1;
+    height: 4px;
+    background: #0025f1;
+    border-radius: 2px;
+    margin: 0 10px; }
+    .bar-area .bar .progress {
+      width: 0%;
+      transition: all .2s;
+      height: 100%;
+      border-radius: 2px;
+      background: #db3baa;
+      position: relative; }
+      .bar-area .bar .progress::after {
+        content: '';
+        position: absolute;
+        right: -8px;
+        top: -7px;
+        display: block;
+        width: 16px;
+        height: 16px;
+        background: url(/progress.798a5c76.svg) 0 0 no-repeat;
+        background-size: contain; }
+
+@keyframes rotate1 {
+  0% {
+    transform: rotate(0); }
+  100% {
+    transform: rotate(360deg); } }
+
+
+/*# sourceMappingURL=/scss.8c25d549.css.map */
