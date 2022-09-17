@@ -32,39 +32,40 @@
           height: 8px;
           background: #db3baa; }
 
-.area-effect .effect {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60vh; }
-  .area-effect .effect > div {
-    background-size: contain;
-    position: absolute; }
-  .area-effect .effect .effect-1 {
-    background: url("/effect-no-move.e6a51026.svg") 0 0 no-repeat;
-    width: 70vw;
-    height: 70vw;
-    animation: rotate1 20s linear infinite; }
-  .area-effect .effect .effect-2 {
-    background: url("/effect-move1.8d0ce205.svg") 0 0 no-repeat;
-    width: 60vw;
-    height: 60vw;
-    animation: rotate1 10s linear infinite reverse; }
-  .area-effect .effect .effect-3 {
-    background: url("/effect-move2.143040a0.svg") 0 0 no-repeat;
-    width: 24vw;
-    height: 24vw;
-    animation: rotate1 10s linear infinite; }
-
-.area-effect .lyric {
-  text-align: center; }
-  .area-effect .lyric p {
-    font-size: 13px;
-    color: #868aaf;
-    margin-top: 10px; }
-    .area-effect .lyric p.current {
-      color: #fff; }
+.page1-effects {
+  height: calc(100vh - 270px); }
+  .page1-effects .panel-effect .effect {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh; }
+    .page1-effects .panel-effect .effect > div {
+      background-size: contain;
+      position: absolute; }
+    .page1-effects .panel-effect .effect .effect-1 {
+      background: url("/effect-no-move.e6a51026.svg") 0 0 no-repeat;
+      width: 70vw;
+      height: 70vw;
+      animation: rotate1 20s linear infinite; }
+    .page1-effects .panel-effect .effect .effect-2 {
+      background: url("/effect-move1.8d0ce205.svg") 0 0 no-repeat;
+      width: 60vw;
+      height: 60vw;
+      animation: rotate1 10s linear infinite reverse; }
+    .page1-effects .panel-effect .effect .effect-3 {
+      background: url("/effect-move2.143040a0.svg") 0 0 no-repeat;
+      width: 24vw;
+      height: 24vw;
+      animation: rotate1 10s linear infinite; }
+  .page1-effects .panel-effect .lyric {
+    text-align: center; }
+    .page1-effects .panel-effect .lyric p {
+      font-size: 13px;
+      color: #868aaf;
+      margin-top: 10px; }
+      .page1-effects .panel-effect .lyric p.current-lyric {
+        color: #fff; }
 
 .footer {
   height: 180px; }
@@ -110,13 +111,13 @@
       margin: 0 10px; }
       .footer .bar-area .bar .progress {
         width: 0%;
-        transition: all .2s;
+        transition: all 0.2s;
         height: 100%;
         border-radius: 2px;
         background: #db3baa;
         position: relative; }
         .footer .bar-area .bar .progress::after {
-          content: '';
+          content: "";
           position: absolute;
           right: -8px;
           top: -7px;
