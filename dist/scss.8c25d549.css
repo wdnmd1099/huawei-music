@@ -6,6 +6,7 @@
   height: 100vh;
   background: #060a3d; }
   #player .header {
+    height: 100px;
     text-align: center; }
     #player .header h1 {
       color: #fff;
@@ -14,6 +15,22 @@
     #player .header p {
       color: #868aaf;
       font-size: 12px; }
+    #player .header .balls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px; }
+      #player .header .balls span {
+        display: block;
+        width: 5px;
+        height: 5px;
+        background: #6a134f;
+        border-radius: 50%;
+        margin: 0 4px; }
+        #player .header .balls span.current {
+          width: 8px;
+          height: 8px;
+          background: #db3baa; }
 
 .area-effect .effect {
   position: relative;
@@ -40,23 +57,6 @@
     height: 24vw;
     animation: rotate1 10s linear infinite; }
 
-.area-effect .balls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px; }
-  .area-effect .balls span {
-    display: block;
-    width: 5px;
-    height: 5px;
-    background: #6a134f;
-    border-radius: 50%;
-    margin: 0 4px; }
-    .area-effect .balls span.current {
-      width: 8px;
-      height: 8px;
-      background: #db3baa; }
-
 .area-effect .lyric {
   text-align: center; }
   .area-effect .lyric p {
@@ -66,65 +66,65 @@
     .area-effect .lyric p.current {
       color: #fff; }
 
-.buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center; }
-  .buttons svg {
-    width: 24px;
-    height: 24px;
-    margin: 0 20px;
-    margin-top: 20px; }
-
-.actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 20px; }
-  .actions svg {
-    width: 28px;
-    height: 28px; }
-    .actions svg.btn-play-pause {
-      width: 50px;
-      height: 50px; }
-
-.bar-area {
-  color: #868aaf;
-  font-size: 12px;
-  display: flex;
-  padding: 0 20px;
-  margin-top: 20px;
-  align-items: center; }
-  .bar-area .time-start {
-    order: 1;
-    width: 40px; }
-  .bar-area .time-end {
-    order: 3;
-    width: 40px; }
-  .bar-area .bar {
-    order: 2;
-    flex: 1;
-    height: 4px;
-    background: #0025f1;
-    border-radius: 2px;
-    margin: 0 10px; }
-    .bar-area .bar .progress {
-      width: 0%;
-      transition: all .2s;
-      height: 100%;
+.footer {
+  height: 180px; }
+  .footer .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .footer .buttons svg {
+      width: 24px;
+      height: 24px;
+      margin: 0 20px;
+      margin-top: 20px; }
+  .footer .actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px; }
+    .footer .actions svg {
+      width: 28px;
+      height: 28px; }
+      .footer .actions svg.btn-play-pause {
+        width: 50px;
+        height: 50px; }
+  .footer .bar-area {
+    color: #868aaf;
+    font-size: 12px;
+    display: flex;
+    padding: 0 20px;
+    margin-top: 20px;
+    align-items: center; }
+    .footer .bar-area .time-start {
+      order: 1;
+      width: 40px; }
+    .footer .bar-area .time-end {
+      order: 3;
+      width: 40px; }
+    .footer .bar-area .bar {
+      order: 2;
+      flex: 1;
+      height: 4px;
+      background: #0025f1;
       border-radius: 2px;
-      background: #db3baa;
-      position: relative; }
-      .bar-area .bar .progress::after {
-        content: '';
-        position: absolute;
-        right: -8px;
-        top: -7px;
-        display: block;
-        width: 16px;
-        height: 16px;
-        background: url(/progress.798a5c76.svg) 0 0 no-repeat;
-        background-size: contain; }
+      margin: 0 10px; }
+      .footer .bar-area .bar .progress {
+        width: 0%;
+        transition: all .2s;
+        height: 100%;
+        border-radius: 2px;
+        background: #db3baa;
+        position: relative; }
+        .footer .bar-area .bar .progress::after {
+          content: '';
+          position: absolute;
+          right: -8px;
+          top: -7px;
+          display: block;
+          width: 16px;
+          height: 16px;
+          background: url(/progress.798a5c76.svg) 0 0 no-repeat;
+          background-size: contain; }
 
 @keyframes rotate1 {
   0% {
