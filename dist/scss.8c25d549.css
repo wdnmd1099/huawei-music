@@ -33,7 +33,7 @@
           background: #db3baa; }
 
 .page1-effects {
-  height: calc(100vh - 270px); }
+  height: calc(100vh - 280px); }
   .page1-effects .panel-effect .effect {
     position: relative;
     display: flex;

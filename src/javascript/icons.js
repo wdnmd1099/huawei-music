@@ -1,15 +1,13 @@
 let svgPlaceholder = document.createElement("div");
-// svgPlaceholder.style.position="absolute"
-// svgPlaceholder.style.width = 0
-// svgPlaceholder.style.height = 0
-// svgPlaceholder.style.overflow = "hidden"
+//下面隐藏插入到html的元素
+svgPlaceholder.style.position="absolute"
+svgPlaceholder.style.width = 0
+svgPlaceholder.style.height = 0
+svgPlaceholder.style.overflow = "hidden"
 // svgPlaceholder.style.display = "none"
+
 document.body.appendChild(svgPlaceholder);
 svgPlaceholder.innerHTML = `
-
-
-
-
 <?xml version="1.0" encoding="UTF-8"?>
 <svg
   style="display: none"
