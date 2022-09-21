@@ -14,6 +14,7 @@ $color3: #0025f1;
 #player {
   height: 100vh;
   background: $backgroundColor;
+  overflow: hidden;
   .header {
     height: 100px;
     text-align: center;
@@ -49,32 +50,34 @@ $color3: #0025f1;
   }
 }
 
-.page1-effects {
-    // width: 100vw;
+.page-effects {
+    width: 200vw;
     height: calc(100vh - 280px);
-    // display: flex;
-    // align-items: center;
+    display: flex;
+    align-items: center;
+    background: pink;
 
-    // transition: transform 0.3s;
+    transition: transform 0.3s;
 
-    // &.panel1 {
-    //   transform: translateX(0vw);
-    // }
-    // &.panel2 {
-    //   transform: translateX(-100vw);
-    // }
+    &.page1 {
+      transform: translateX(0vw);
+    }
+    &.page2 {
+      transform: translateX(-100vw);
+    }
   .panel-effect {
-    // width: 100vw;
-    // height: 100%;
-    // display: flex;
-    // flex-direction: column;
-    // justify-content: center;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  
     .effect {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 40vh;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40vh;
       > div {
         background-size: contain; //https://blog.csdn.net/caicai1171523597/article/details/105876002
         position: absolute;

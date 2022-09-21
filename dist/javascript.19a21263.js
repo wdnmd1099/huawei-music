@@ -131,6 +131,115 @@ svgPlaceholder.innerHTML = "\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg\n
 "use strict";
 
 require("./icons.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+console.log(); // function $(selector){        完全等价于下面的
+//     return document.querySelector(selector)
+// }
+
+var $ = function $(selector) {
+  return document.querySelector(selector);
+};
+
+var $$ = function $$(selector) {
+  return document.querySelectorAll(selector);
+};
+
+var Player = /*#__PURE__*/function () {
+  function Player(node) {
+    _classCallCheck(this, Player);
+
+    this.root = typeof node === 'string' ? $(node) : node; //要么是字符串 要么是DOM节点 字符串就直接去找
+
+    this.songList = [];
+    this.currentIndex = 0;
+    this.audio = new Audio(); //相当于在html插入一个<audio src=""></audio>标签
+
+    this.start();
+    this.bind();
+  }
+
+  _createClass(Player, [{
+    key: "start",
+    value: function start() {
+      var _this = this;
+
+      console.log(this.root.querySelector('.btn-play-pause'));
+      fetch('https://jirengu.github.io/data-mock/huawei-music/music-list.json').then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        console.log(data);
+        _this.songList = data;
+        _this.audio.src = _this.songList[_this.currentIndex].url;
+      });
+    }
+  }, {
+    key: "bind",
+    value: function bind() {
+      var self = this;
+      console.log(this);
+
+      this.root.querySelector('.btn-play-pause').onclick = function () {
+        if (this.classList.contains('playing')) {
+          self.pauseSong();
+          console.log(this.classList);
+          this.classList.remove('playing');
+          this.classList.add('pause');
+          this.querySelector('use').setAttribute('xlink:href', '#icon-play');
+        } else if (this.classList.contains('pause')) {
+          self.playSong();
+          this.classList.remove('pause');
+          this.classList.add('playing'); //this.querySelector('use').setAttribute('xlink:href','#icon-pause')
+        }
+      };
+
+      this.root.querySelector('.btn-pre').onclick = function () {
+        if (self.currentIndex <= self.songList.length - 1 && self.currentIndex > 0) {
+          self.audio.src = self.songList[self.currentIndex -= 1].url;
+        } else {
+          self.currentIndex = self.songList.length - 1;
+          self.audio.src = self.songList[self.currentIndex].url;
+        }
+
+        self.playSong();
+        console.log(self.songList[self.currentIndex].title);
+      };
+
+      this.root.querySelector('.btn-next').onclick = function () {
+        if (self.currentIndex < self.songList.length - 1) {
+          self.audio.src = self.songList[self.currentIndex += 1].url;
+        } else {
+          self.currentIndex = 0;
+          self.audio.src = self.songList[self.currentIndex].url;
+        }
+
+        self.playSong();
+        console.log(self.songList[self.currentIndex].title);
+      };
+    }
+  }, {
+    key: "playSong",
+    value: function playSong() {
+      this.audio.play();
+      $('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
+    }
+  }, {
+    key: "pauseSong",
+    value: function pauseSong() {
+      this.audio.pause();
+      $('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
+    }
+  }]);
+
+  return Player;
+}();
+
+new Player('#player');
 },{"./icons.js":"src/javascript/icons.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -159,7 +268,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64279" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50892" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
