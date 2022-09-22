@@ -28,7 +28,7 @@
         background: #6a134f;
         border-radius: 50%;
         margin: 0 4px; }
-        #player .header .balls span.current {
+        #player .header .balls span.current-ball {
           width: 8px;
           height: 8px;
           background: #db3baa; }
@@ -38,7 +38,6 @@
   height: calc(100vh - 280px);
   display: flex;
   align-items: center;
-  background: pink;
   transition: transform 0.3s; }
   .page-effects.page1 {
     transform: translateX(0vw); }

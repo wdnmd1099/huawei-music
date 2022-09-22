@@ -14,7 +14,7 @@ class Player{
         this.audio = new Audio();  //相当于在html插入一个<audio src=""></audio>标签
         this.start();
         this.bind();
-
+        this.swiper();
     }
 
     start(){
@@ -25,6 +25,7 @@ class Player{
                 console.log(data)
                 this.songList = data 
                 this.audio.src  =  this.songList[this.currentIndex].url
+                this.getNews();
             })
     }
 
@@ -39,10 +40,11 @@ class Player{
             this.classList.add('pause')
             this.querySelector('use').setAttribute('xlink:href','#icon-play')
            }else if(this.classList.contains('pause')){
+            console.log(this.classList)
             self.playSong()
             this.classList.remove('pause')
             this.classList.add('playing')
-            //this.querySelector('use').setAttribute('xlink:href','#icon-pause')
+            this.querySelector('use').setAttribute('xlink:href','#icon-pause')
            } 
         } 
         this.root.querySelector('.btn-pre').onclick = function(){
@@ -53,7 +55,7 @@ class Player{
                 self.audio.src  =  self.songList[self.currentIndex].url
             }
             self.playSong()
-            console.log(self.songList[self.currentIndex].title)
+            self.getNews()
         }
         this.root.querySelector('.btn-next').onclick = function(){
             if(self.currentIndex<self.songList.length-1){
@@ -63,14 +65,49 @@ class Player{
                 self.audio.src  =  self.songList[self.currentIndex].url
             }
             self.playSong()
+            self.getNews()
             console.log(self.songList[self.currentIndex].title)
         }
+       
+
+
+    }
+
+
+    
+    swiper(){
+        let startX;
+        let endX;
+        let clock;
+
+        this.root.querySelector('.page-effects').ontouchstart = function(e){
+            startX =  e.touches[0].pageX
+         }
+         this.root.querySelector(".page-effects").ontouchmove = function (e) {
+           if(clock) //假如clock存在
+           clearInterval(clock)
+           clock = setTimeout(() => {
+            endX = e.touches[0].pageX;
+           if (endX - startX > 20) {
+             $('.page-effects').classList.remove('page2')
+             $('.page-effects').classList.add('page1')
+             $('.ball2').classList.remove('current-ball')
+             $('.ball1').classList.add('current-ball')
+           } else if (endX - startX < 20) {
+             $('.page-effects').classList.remove('page1')
+             $('.page-effects').classList.add('page2')
+             $('.ball1').classList.remove('current-ball')
+             $('.ball2').classList.add('current-ball')
+           }
+           }, 100);
+         };
+          
     }
 
     playSong(){
         this.audio.play()
         $('.btn-play-pause').querySelector('use')
-        .setAttribute('xlink:href','#icon-pause')  
+        .setAttribute('xlink:href','#icon-pause')
     }
     pauseSong(){    
         this.audio.pause()
@@ -78,8 +115,14 @@ class Player{
         .setAttribute('xlink:href','#icon-play')  
     }
 
+    getNews(){
+        $('.song-title').innerText = this.songList[this.currentIndex].title
+        $('.singer').innerText = this.songList[this.currentIndex].author
+    }
 
 }
 
 
 new Player('#player')
+
+

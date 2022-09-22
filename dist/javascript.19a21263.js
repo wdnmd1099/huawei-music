@@ -162,6 +162,7 @@ var Player = /*#__PURE__*/function () {
 
     this.start();
     this.bind();
+    this.swiper();
   }
 
   _createClass(Player, [{
@@ -176,6 +177,8 @@ var Player = /*#__PURE__*/function () {
         console.log(data);
         _this.songList = data;
         _this.audio.src = _this.songList[_this.currentIndex].url;
+
+        _this.getNews();
       });
     }
   }, {
@@ -192,9 +195,11 @@ var Player = /*#__PURE__*/function () {
           this.classList.add('pause');
           this.querySelector('use').setAttribute('xlink:href', '#icon-play');
         } else if (this.classList.contains('pause')) {
+          console.log(this.classList);
           self.playSong();
           this.classList.remove('pause');
-          this.classList.add('playing'); //this.querySelector('use').setAttribute('xlink:href','#icon-pause')
+          this.classList.add('playing');
+          this.querySelector('use').setAttribute('xlink:href', '#icon-pause');
         }
       };
 
@@ -207,7 +212,7 @@ var Player = /*#__PURE__*/function () {
         }
 
         self.playSong();
-        console.log(self.songList[self.currentIndex].title);
+        self.getNews();
       };
 
       this.root.querySelector('.btn-next').onclick = function () {
@@ -219,7 +224,39 @@ var Player = /*#__PURE__*/function () {
         }
 
         self.playSong();
+        self.getNews();
         console.log(self.songList[self.currentIndex].title);
+      };
+    }
+  }, {
+    key: "swiper",
+    value: function swiper() {
+      var startX;
+      var endX;
+      var clock;
+
+      this.root.querySelector('.page-effects').ontouchstart = function (e) {
+        startX = e.touches[0].pageX;
+      };
+
+      this.root.querySelector(".page-effects").ontouchmove = function (e) {
+        if (clock) //假如clock存在
+          clearInterval(clock);
+        clock = setTimeout(function () {
+          endX = e.touches[0].pageX;
+
+          if (endX - startX > 20) {
+            $('.page-effects').classList.remove('page2');
+            $('.page-effects').classList.add('page1');
+            $('.ball2').classList.remove('current-ball');
+            $('.ball1').classList.add('current-ball');
+          } else if (endX - startX < 20) {
+            $('.page-effects').classList.remove('page1');
+            $('.page-effects').classList.add('page2');
+            $('.ball1').classList.remove('current-ball');
+            $('.ball2').classList.add('current-ball');
+          }
+        }, 100);
       };
     }
   }, {
@@ -233,6 +270,12 @@ var Player = /*#__PURE__*/function () {
     value: function pauseSong() {
       this.audio.pause();
       $('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
+    }
+  }, {
+    key: "getNews",
+    value: function getNews() {
+      $('.song-title').innerText = this.songList[this.currentIndex].title;
+      $('.singer').innerText = this.songList[this.currentIndex].author;
     }
   }]);
 
@@ -268,7 +311,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50892" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50010" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
