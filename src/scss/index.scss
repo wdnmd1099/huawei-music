@@ -55,7 +55,7 @@ $color3: #0025f1;
     height: calc(100vh - 280px);
     display: flex;
     align-items: center;
-   // background: pink;
+    background: pink;
 
     transition: transform 0.3s;
 
@@ -116,6 +116,15 @@ $color3: #0025f1;
         }
       }
     }
+  }
+  .lyrics-page{
+    border: 2px solid red;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    //align-items: center;
+    align-items: center;
+    margin-top:-100vw;
   }
 }
 

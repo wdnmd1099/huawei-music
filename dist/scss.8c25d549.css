@@ -38,6 +38,7 @@
   height: calc(100vh - 280px);
   display: flex;
   align-items: center;
+  background: pink;
   transition: transform 0.3s; }
   .page-effects.page1 {
     transform: translateX(0vw); }
@@ -81,6 +82,13 @@
         margin-top: 10px; }
         .page-effects .panel-effect .lyric p.current-lyric {
           color: #fff; }
+  .page-effects .lyrics-page {
+    border: 2px solid red;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -100vw; }
 
 .footer {
   height: 180px; }

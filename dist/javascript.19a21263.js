@@ -142,19 +142,29 @@ console.log(); // function $(selector){        完全等价于下面的
 //     return document.querySelector(selector)
 // }
 
-var $ = function $(selector) {
+var $1 = function $1(selector) {
   return document.querySelector(selector);
 };
 
-var $$ = function $$(selector) {
+var $$1 = function $$1(selector) {
   return document.querySelectorAll(selector);
 };
 
 var Player = /*#__PURE__*/function () {
   function Player(node) {
+    var _this = this;
+
     _classCallCheck(this, Player);
 
-    this.root = typeof node === 'string' ? $(node) : node; //要么是字符串 要么是DOM节点 字符串就直接去找
+    this.root = typeof node === 'string' ? document.querySelector(node) : node; //要么是字符串 要么是DOM节点 字符串就直接去找
+
+    this.$ = function (selector) {
+      return _this.root.querySelector(selector);
+    };
+
+    this.$$ = function (selector) {
+      return _this.root.querySelectorAll(selector);
+    };
 
     this.songList = [];
     this.currentIndex = 0;
@@ -168,17 +178,17 @@ var Player = /*#__PURE__*/function () {
   _createClass(Player, [{
     key: "start",
     value: function start() {
-      var _this = this;
+      var _this2 = this;
 
-      console.log(this.root.querySelector('.btn-play-pause'));
+      console.log(this.$('.btn-play-pause'));
       fetch('https://jirengu.github.io/data-mock/huawei-music/music-list.json').then(function (res) {
         return res.json();
       }).then(function (data) {
         console.log(data);
-        _this.songList = data;
-        _this.audio.src = _this.songList[_this.currentIndex].url;
+        _this2.songList = data;
+        _this2.audio.src = _this2.songList[_this2.currentIndex].url;
 
-        _this.getNews();
+        _this2.getNews();
       });
     }
   }, {
@@ -187,23 +197,15 @@ var Player = /*#__PURE__*/function () {
       var self = this;
       console.log(this);
 
-      this.root.querySelector('.btn-play-pause').onclick = function () {
+      this.$('.btn-play-pause').onclick = function () {
         if (this.classList.contains('playing')) {
           self.pauseSong();
-          console.log(this.classList);
-          this.classList.remove('playing');
-          this.classList.add('pause');
-          this.querySelector('use').setAttribute('xlink:href', '#icon-play');
         } else if (this.classList.contains('pause')) {
-          console.log(this.classList);
           self.playSong();
-          this.classList.remove('pause');
-          this.classList.add('playing');
-          this.querySelector('use').setAttribute('xlink:href', '#icon-pause');
         }
       };
 
-      this.root.querySelector('.btn-pre').onclick = function () {
+      this.$('.btn-pre').onclick = function () {
         if (self.currentIndex <= self.songList.length - 1 && self.currentIndex > 0) {
           self.audio.src = self.songList[self.currentIndex -= 1].url;
         } else {
@@ -215,7 +217,7 @@ var Player = /*#__PURE__*/function () {
         self.getNews();
       };
 
-      this.root.querySelector('.btn-next').onclick = function () {
+      this.$('.btn-next').onclick = function () {
         if (self.currentIndex < self.songList.length - 1) {
           self.audio.src = self.songList[self.currentIndex += 1].url;
         } else {
@@ -234,27 +236,34 @@ var Player = /*#__PURE__*/function () {
       var startX;
       var endX;
       var clock;
+      var self = this;
 
-      this.root.querySelector('.page-effects').ontouchstart = function (e) {
+      this.$('.page-effects').ontouchstart = function (e) {
         startX = e.touches[0].pageX;
       };
 
-      this.root.querySelector(".page-effects").ontouchmove = function (e) {
+      this.$(".page-effects").ontouchmove = function (e) {
+        var _this3 = this;
+
         if (clock) //假如clock存在
           clearInterval(clock);
         clock = setTimeout(function () {
           endX = e.touches[0].pageX;
 
           if (endX - startX > 20) {
-            $('.page-effects').classList.remove('page2');
-            $('.page-effects').classList.add('page1');
-            $('.ball2').classList.remove('current-ball');
-            $('.ball1').classList.add('current-ball');
+            _this3.classList.remove('page2');
+
+            _this3.classList.add('page1');
+
+            self.$('.ball2').classList.remove('current-ball');
+            self.$('.ball1').classList.add('current-ball');
           } else if (endX - startX < 20) {
-            $('.page-effects').classList.remove('page1');
-            $('.page-effects').classList.add('page2');
-            $('.ball1').classList.remove('current-ball');
-            $('.ball2').classList.add('current-ball');
+            _this3.classList.remove('page1');
+
+            _this3.classList.add('page2');
+
+            self.$('.ball1').classList.remove('current-ball');
+            self.$('.ball2').classList.add('current-ball');
           }
         }, 100);
       };
@@ -263,19 +272,23 @@ var Player = /*#__PURE__*/function () {
     key: "playSong",
     value: function playSong() {
       this.audio.play();
-      $('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
+      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
+      this.$('.btn-play-pause').classList.remove('pause');
+      this.$('.btn-play-pause').classList.add('playing');
     }
   }, {
     key: "pauseSong",
     value: function pauseSong() {
       this.audio.pause();
-      $('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
+      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
+      this.$('.btn-play-pause').classList.remove('playing');
+      this.$('.btn-play-pause').classList.add('pause');
     }
   }, {
     key: "getNews",
     value: function getNews() {
-      $('.song-title').innerText = this.songList[this.currentIndex].title;
-      $('.singer').innerText = this.songList[this.currentIndex].author;
+      this.$('.song-title').innerText = this.songList[this.currentIndex].title;
+      this.$('.singer').innerText = this.songList[this.currentIndex].author;
     }
   }]);
 
