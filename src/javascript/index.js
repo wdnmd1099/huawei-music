@@ -117,7 +117,19 @@ class Player{
     getNews(){
         this.$('.song-title').innerText = this.songList[this.currentIndex].title
         this.$('.singer').innerText = this.songList[this.currentIndex].author
+        fetch(this.songList[this.currentIndex].lyric)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.lrc.lyric)
+            })
     }
+
+    setLineToCenter(node){
+        let offset = node.offsetTop - this.$('.move').offsetHeight / 2
+        
+    }
+
+
 
 }
 

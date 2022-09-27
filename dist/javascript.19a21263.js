@@ -289,6 +289,16 @@ var Player = /*#__PURE__*/function () {
     value: function getNews() {
       this.$('.song-title').innerText = this.songList[this.currentIndex].title;
       this.$('.singer').innerText = this.songList[this.currentIndex].author;
+      fetch(this.songList[this.currentIndex].lyric).then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        console.log(data.lrc.lyric);
+      });
+    }
+  }, {
+    key: "setLineToCenter",
+    value: function setLineToCenter(node) {
+      var offset = node.offsetTop - this.$('.move').offsetHeight / 2;
     }
   }]);
 
@@ -324,7 +334,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50010" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55097" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
