@@ -17,6 +17,7 @@ class Player{
         this.start();
         this.bind();
         this.swiper();
+        this.setLineToCenter(this.$('.move .current'))
     }
 
     start(){
@@ -125,8 +126,9 @@ class Player{
     }
 
     setLineToCenter(node){
-        let offset = node.offsetTop - this.$('.move').offsetHeight / 2
-        
+        let offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2 ;
+        offset > 0 ? offset : 0 ; 
+        this.$('.move').style.transform = `translateY(-${offset}px)`  //操作transform语法
     }
 
 

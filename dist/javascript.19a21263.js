@@ -173,6 +173,7 @@ var Player = /*#__PURE__*/function () {
     this.start();
     this.bind();
     this.swiper();
+    this.setLineToCenter(this.$('.move .current'));
   }
 
   _createClass(Player, [{
@@ -298,7 +299,9 @@ var Player = /*#__PURE__*/function () {
   }, {
     key: "setLineToCenter",
     value: function setLineToCenter(node) {
-      var offset = node.offsetTop - this.$('.move').offsetHeight / 2;
+      var offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2;
+      offset > 0 ? offset : 0;
+      this.$('.move').style.transform = "translateY(-".concat(offset, "px)"); //操作transform语法
     }
   }]);
 
@@ -334,7 +337,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55097" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50039" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
