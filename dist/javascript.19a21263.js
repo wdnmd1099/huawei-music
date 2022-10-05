@@ -172,8 +172,7 @@ var Player = /*#__PURE__*/function () {
 
     this.start();
     this.bind();
-    this.swiper();
-    this.setLineToCenter(this.$('.move .current'));
+    this.swiper(); //this.setLineToCenter(this.$('.move .current'))
   }
 
   _createClass(Player, [{
@@ -182,7 +181,7 @@ var Player = /*#__PURE__*/function () {
       var _this2 = this;
 
       console.log(this.$('.btn-play-pause'));
-      fetch('https://jirengu.github.io/data-mock/huawei-music/music-list.json').then(function (res) {
+      fetch('https://karr.top/music-data/music-data/music-data.json').then(function (res) {
         return res.json();
       }).then(function (data) {
         console.log(data);
@@ -288,12 +287,50 @@ var Player = /*#__PURE__*/function () {
   }, {
     key: "getNews",
     value: function getNews() {
-      this.$('.song-title').innerText = this.songList[this.currentIndex].title;
-      this.$('.singer').innerText = this.songList[this.currentIndex].author;
-      fetch(this.songList[this.currentIndex].lyric).then(function (res) {
-        return res.json();
+      var _this4 = this;
+
+      var ZZZ = [];
+      var time = [];
+      var ci;
+      var test;
+      this.$('.song-title').innerText = this.songList[this.currentIndex].title; //获取歌名
+
+      this.$('.singer').innerText = this.songList[this.currentIndex].author; //获取歌手名
+
+      fetch(this.songList[this.currentIndex].lyric) //拿到歌词
+      .then(function (res) {
+        return res.text();
       }).then(function (data) {
-        console.log(data.lrc.lyric);
+        //console.log(data)
+        test = data.split(/\s/).filter(function (str) {
+          return str.match(/\[.+?\]/);
+        }).forEach(function (X) {
+          ci = X.replace(/\[.+]/gm, ''); //筛选出歌词
+
+          X.match(/\[.+?\]/g) //删选出时间戳，并转化为毫秒
+          .forEach(function (t) {
+            t = t.replace(/[\[\]]/g, '');
+            time = parseInt(t.slice(0, 2)) * 60 * 1000 + parseInt(t.slice(3, 5)) * 1000 + parseInt(t.slice(6)); //转成毫秒数
+
+            ZZZ.push([time, ci]); //把时间戳和词 打包进数组
+          });
+        });
+
+        _this4.$('.move').remove(); //删掉上一首残留的歌词节点
+
+
+        var move1 = document.createElement('div'); //创建新的歌词节点加到页面上
+
+        move1.className = 'move';
+        document.querySelector('.lyrics-page').appendChild(move1);
+
+        for (var i = 0; i < ZZZ.length; i++) {
+          //把歌词渲染到页面
+          var p = document.createElement('p');
+          p.setAttribute('data-time', ZZZ[i][0]);
+          p.innerText = ZZZ[i][1];
+          document.querySelector('.move').appendChild(p);
+        }
       });
     }
   }, {
@@ -337,7 +374,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54854" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50678" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

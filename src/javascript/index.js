@@ -17,12 +17,12 @@ class Player{
         this.start();
         this.bind();
         this.swiper();
-        this.setLineToCenter(this.$('.move .current'))
-    }
+        //this.setLineToCenter(this.$('.move .current'))
+    } 
 
     start(){
         console.log(this.$('.btn-play-pause'))
-        fetch('https://jirengu.github.io/data-mock/huawei-music/music-list.json')
+        fetch('https://karr.top/music-data/music-data/music-data.json')
             .then(res => res.json())
             .then(data => {
                 console.log(data)
@@ -116,23 +116,59 @@ class Player{
     }
 
     getNews(){
-        this.$('.song-title').innerText = this.songList[this.currentIndex].title
-        this.$('.singer').innerText = this.songList[this.currentIndex].author
-        fetch(this.songList[this.currentIndex].lyric)
-            .then(res => res.json())
+        let ZZZ = [];
+        let time = [] ;
+        let ci ;
+        let test;
+        this.$('.song-title').innerText = this.songList[this.currentIndex].title  //获取歌名
+        this.$('.singer').innerText = this.songList[this.currentIndex].author  //获取歌手名
+        fetch(this.songList[this.currentIndex].lyric)  //拿到歌词
+            .then(res => res.text())    
             .then(data => {
-                console.log(data.lrc.lyric)
+                //console.log(data)
+             test =data.split(/\s/).filter(str => str.match(/\[.+?\]/))   
+            .forEach(X => {
+            ci =  X.replace(/\[.+]/gm,'')  //筛选出歌词
+
+            X.match(/\[.+?\]/g)   //删选出时间戳，并转化为毫秒
+            .forEach(t=>{ 
+             t = t.replace(/[\[\]]/g,'')   
+             time = parseInt(t.slice(0,2))*60*1000 + parseInt(t.slice(3,5))*1000 + parseInt(t.slice(6)) //转成毫秒数
+             ZZZ.push([time, ci])  //把时间戳和词 打包进数组
+        })
+        }) 
+        this.$('.move').remove();   //删掉上一首残留的歌词节点
+        let move1 = document.createElement('div')  //创建新的歌词节点加到页面上
+        move1.className = 'move' 
+        document.querySelector('.lyrics-page').appendChild(move1)
+        for(let i=0;i<ZZZ.length;i++){   //把歌词渲染到页面
+                    let p = document.createElement('p')
+                    p.setAttribute('data-time', ZZZ[i][0])
+                    p.innerText=ZZZ[i][1]
+                    document.querySelector('.move').appendChild(p)
+                }
+               
             })
+            
     }
 
     setLineToCenter(node){
-        let offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2 ;
+       let offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2 ;
         offset > 0 ? offset : 0 ; 
         this.$('.move').style.transform = `translateY(-${offset}px)`  //操作transform语法
+   
+       
+    }
+
+
+    geCiGunDong(){
+        console.log('xxx')
     }
 
 
 
+
+    
 }
 
 
