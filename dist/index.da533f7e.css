@@ -1,0 +1,236 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#player {
+  height: 100vh;
+  background: #060a3d;
+  overflow: hidden;
+}
+
+#player .header {
+  height: 100px;
+  text-align: center;
+}
+
+#player .header h1 {
+  color: #fff;
+  padding-top: 20px;
+  font-size: 20px;
+}
+
+#player .header p {
+  color: #868aaf;
+  font-size: 12px;
+}
+
+#player .header .balls {
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  display: flex;
+}
+
+#player .header .balls span {
+  width: 5px;
+  height: 5px;
+  background: #6a134f;
+  border-radius: 50%;
+  margin: 0 4px;
+  display: block;
+}
+
+#player .header .balls span.current-ball {
+  width: 8px;
+  height: 8px;
+  background: #db3baa;
+}
+
+.page-effects {
+  width: 200vw;
+  height: calc(100vh - 280px);
+  align-items: center;
+  transition: transform .3s;
+  display: flex;
+}
+
+.page-effects.page1 {
+  transform: translateX(0);
+}
+
+.page-effects.page2 {
+  transform: translateX(-100vw);
+}
+
+.page-effects .panel-effect {
+  width: 100vw;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+}
+
+.page-effects .panel-effect .effect {
+  height: 40vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.page-effects .panel-effect .effect > div {
+  background-size: contain;
+  position: absolute;
+}
+
+.page-effects .panel-effect .effect .effect-1 {
+  width: 70vw;
+  height: 70vw;
+  background: url("effect-no-move.edd1437c.svg") no-repeat;
+  animation: 20s linear infinite rotate1;
+}
+
+.page-effects .panel-effect .effect .effect-2 {
+  width: 60vw;
+  height: 60vw;
+  background: url("effect-move1.4961e0ae.svg") no-repeat;
+  animation: 10s linear infinite reverse rotate1;
+}
+
+.page-effects .panel-effect .effect .effect-3 {
+  width: 24vw;
+  height: 24vw;
+  background: url("effect-move2.96a4719d.svg") no-repeat;
+  animation: 10s linear infinite rotate1;
+}
+
+.page-effects .panel-effect .lyric {
+  text-align: center;
+}
+
+.page-effects .panel-effect .lyric p {
+  color: #868aaf;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.page-effects .panel-effect .lyric p.current-lyric {
+  color: #fff;
+}
+
+.page-effects .lyrics-page {
+  width: 100vw;
+  height: 100%;
+  text-align: center;
+  border: 2px solid red;
+  line-height: 2;
+  overflow: hidden;
+}
+
+.page-effects .lyrics-page .move {
+  transition: all .3s;
+  transform: translateY(-100px);
+}
+
+.page-effects .lyrics-page .move p {
+  color: #868aaf;
+  font-size: 14px;
+}
+
+.page-effects .lyrics-page .move p.current {
+  color: #fff;
+}
+
+.footer {
+  height: 180px;
+}
+
+.footer .buttons {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.footer .buttons svg {
+  width: 24px;
+  height: 24px;
+  margin: 20px 20px 0;
+}
+
+.footer .actions {
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  display: flex;
+}
+
+.footer .actions svg {
+  width: 28px;
+  height: 28px;
+}
+
+.footer .actions svg.btn-play-pause {
+  width: 50px;
+  height: 50px;
+}
+
+.footer .bar-area {
+  color: #868aaf;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0 20px;
+  font-size: 12px;
+  display: flex;
+}
+
+.footer .bar-area .time-start {
+  width: 40px;
+  order: 1;
+}
+
+.footer .bar-area .time-end {
+  width: 40px;
+  order: 3;
+}
+
+.footer .bar-area .bar {
+  height: 4px;
+  background: #0025f1;
+  border-radius: 2px;
+  flex: 1;
+  order: 2;
+  margin: 0 10px;
+}
+
+.footer .bar-area .bar .progress {
+  width: 0%;
+  height: 100%;
+  background: #db3baa;
+  border-radius: 2px;
+  transition: all .2s;
+  position: relative;
+}
+
+.footer .bar-area .bar .progress:after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: url("progress.721ad718.svg") 0 0 / contain no-repeat;
+  display: block;
+  position: absolute;
+  top: -7px;
+  right: -8px;
+}
+
+@keyframes rotate1 {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*# sourceMappingURL=index.da533f7e.css.map */
