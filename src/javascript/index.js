@@ -5,7 +5,11 @@ console.log()
 // }
 const $1 = selector => document.querySelector(selector)
 const $$1 = selector => document.querySelectorAll(selector)
-
+let cpZZZ = [];
+let lastTime = 0
+let musicCurrentTime = 100
+let clearTimer = false
+let inPlaySong = false
 class Player{
     constructor(node){
         this.root = typeof node === 'string' ? document.querySelector(node) : node   //要么是字符串 要么是DOM节点 字符串就直接去找
@@ -17,11 +21,12 @@ class Player{
         this.start();
         this.bind();
         this.swiper();
-        //this.setLineToCenter(this.$('.move .current'))
+        this.setLineToCenter(this.$('.move .current'))
+        // this.geCiGunDong()
     } 
 
     start(){
-        console.log(this.$('.btn-play-pause'))
+        // console.log(this.$('.btn-play-pause'))
         fetch('https://karr.top/music-data/music-data/music-data.json')
             .then(res => res.json())
             .then(data => {
@@ -34,7 +39,7 @@ class Player{
 
     bind(){
         let self = this
-        console.log(this)
+        // console.log(this)
         this.$('.btn-play-pause').onclick = function(){
            if(this.classList.contains('playing')){
             self.pauseSong()
@@ -49,8 +54,14 @@ class Player{
                 self.currentIndex=self.songList.length-1;
                 self.audio.src  =  self.songList[self.currentIndex].url
             }
-            self.playSong()
+            if(inPlaySong === true){  //不在播放就不清timer，暂时这样写，有bug再修
+                clearTimer = true
+            }
+            clearTimer = true
             self.getNews()
+            self.playSong()
+            
+            
         }
         this.$('.btn-next').onclick = function(){
             if(self.currentIndex<self.songList.length-1){
@@ -59,8 +70,13 @@ class Player{
                 self.currentIndex=0;
                 self.audio.src  =  self.songList[self.currentIndex].url
             }
-            self.playSong()
+            if(inPlaySong === true){ //不在播放就不清timer，暂时这样写，有bug再修
+                clearTimer = true
+            }
+            console.log('下一首')
             self.getNews()
+            self.playSong()
+            
             console.log(self.songList[self.currentIndex].title)
         }
        
@@ -106,6 +122,58 @@ class Player{
         .setAttribute('xlink:href','#icon-pause')
         this.$('.btn-play-pause').classList.remove('pause')
         this.$('.btn-play-pause').classList.add('playing')
+        
+        inPlaySong = true
+        let lyricListArray = []  // 真正最后筛选的歌词数组
+        musicCurrentTime = 100
+        clearInterval(timer)
+        let x =[]
+        let x1 = 0
+        let timer = setInterval(()=>{
+            x1 += 1
+            if(x1 < 2){
+                console.log(122)
+                const lyricList =  document.getElementsByTagName('p')
+                for(let i = 0;i<lyricList.length;i++){
+                    if( lyricList[i].className === '' ){
+                        lyricListArray.push(lyricList[i])
+                    }
+                }
+                
+            }
+            musicCurrentTime += 100
+            cpZZZ.find(item => {
+            if(musicCurrentTime > item[0]){
+                x=[]
+                x.push(item)
+            }
+        })
+            console.log(x[x.length-1],musicCurrentTime,x1)
+
+            lyricListArray.find((item)=>{ 
+                if(x[x.length-1][0].toString() === item.getAttribute('data-time')){ //等于html里的歌词的data-time 就加个样式
+                    item.setAttribute('class','shit')
+                }
+                if(x[x.length-1][0].toString() != item.getAttribute('data-time')){
+                    item.removeAttribute('class','shit')
+                }
+            })
+        if(clearTimer === true){
+            clearTimer = false
+            inPlaySong = false
+            console.log('已停止2222')
+            clearInterval(timer)
+        }
+            
+        if(musicCurrentTime > lastTime ){
+            console.log('已停止')
+            clearInterval(timer)
+          }
+        },100)
+
+       
+
+
     }
     pauseSong(){    
         this.audio.pause()
@@ -136,7 +204,8 @@ class Player{
              time = parseInt(t.slice(0,2))*60*1000 + parseInt(t.slice(3,5))*1000 + parseInt(t.slice(6)) //转成毫秒数
              ZZZ.push([time, ci])  //把时间戳和词 打包进数组
         })
-        }) 
+        })
+        cpZZZ = ZZZ 
         this.$('.move').remove();   //删掉上一首残留的歌词节点
         let move1 = document.createElement('div')  //创建新的歌词节点加到页面上
         move1.className = 'move' 
@@ -144,25 +213,25 @@ class Player{
         for(let i=0;i<ZZZ.length;i++){   //把歌词渲染到页面
                     let p = document.createElement('p')
                     p.setAttribute('data-time', ZZZ[i][0])
+                    if( i === (ZZZ.length-1)){
+                        lastTime =  ZZZ[i][0]
+                    }
                     p.innerText=ZZZ[i][1]
                     document.querySelector('.move').appendChild(p)
                 }
-               
             })
-            
     }
 
     setLineToCenter(node){
        let offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2 ;
         offset > 0 ? offset : 0 ; 
         this.$('.move').style.transform = `translateY(-${offset}px)`  //操作transform语法
-   
-       
     }
 
 
     geCiGunDong(){
-        console.log('xxx')
+        console.log($1('.last-time'))
+        console.log(lastTime)
     }
 
 

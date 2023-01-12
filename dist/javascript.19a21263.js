@@ -150,6 +150,12 @@ var $$1 = function $$1(selector) {
   return document.querySelectorAll(selector);
 };
 
+var cpZZZ = [];
+var lastTime = 0;
+var musicCurrentTime = 100;
+var clearTimer = false;
+var inPlaySong = false;
+
 var Player = /*#__PURE__*/function () {
   function Player(node) {
     var _this = this;
@@ -172,7 +178,8 @@ var Player = /*#__PURE__*/function () {
 
     this.start();
     this.bind();
-    this.swiper(); //this.setLineToCenter(this.$('.move .current'))
+    this.swiper();
+    this.setLineToCenter(this.$('.move .current')); // this.geCiGunDong()
   }
 
   _createClass(Player, [{
@@ -180,7 +187,7 @@ var Player = /*#__PURE__*/function () {
     value: function start() {
       var _this2 = this;
 
-      console.log(this.$('.btn-play-pause'));
+      // console.log(this.$('.btn-play-pause'))
       fetch('https://karr.top/music-data/music-data/music-data.json').then(function (res) {
         return res.json();
       }).then(function (data) {
@@ -194,8 +201,7 @@ var Player = /*#__PURE__*/function () {
   }, {
     key: "bind",
     value: function bind() {
-      var self = this;
-      console.log(this);
+      var self = this; // console.log(this)
 
       this.$('.btn-play-pause').onclick = function () {
         if (this.classList.contains('playing')) {
@@ -213,8 +219,14 @@ var Player = /*#__PURE__*/function () {
           self.audio.src = self.songList[self.currentIndex].url;
         }
 
-        self.playSong();
+        if (inPlaySong === true) {
+          //不在播放就不清timer，暂时这样写，有bug再修
+          clearTimer = true;
+        }
+
+        clearTimer = true;
         self.getNews();
+        self.playSong();
       };
 
       this.$('.btn-next').onclick = function () {
@@ -225,8 +237,14 @@ var Player = /*#__PURE__*/function () {
           self.audio.src = self.songList[self.currentIndex].url;
         }
 
-        self.playSong();
+        if (inPlaySong === true) {
+          //不在播放就不清timer，暂时这样写，有bug再修
+          clearTimer = true;
+        }
+
+        console.log('下一首');
         self.getNews();
+        self.playSong();
         console.log(self.songList[self.currentIndex].title);
       };
     }
@@ -275,6 +293,58 @@ var Player = /*#__PURE__*/function () {
       this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
       this.$('.btn-play-pause').classList.remove('pause');
       this.$('.btn-play-pause').classList.add('playing');
+      inPlaySong = true;
+      var lyricListArray = []; // 真正最后筛选的歌词数组
+
+      musicCurrentTime = 100;
+      clearInterval(timer);
+      var x = [];
+      var x1 = 0;
+      var timer = setInterval(function () {
+        x1 += 1;
+
+        if (x1 < 2) {
+          console.log(122);
+          var lyricList = document.getElementsByTagName('p');
+
+          for (var i = 0; i < lyricList.length; i++) {
+            if (lyricList[i].className === '') {
+              lyricListArray.push(lyricList[i]);
+            }
+          }
+        }
+
+        musicCurrentTime += 100;
+        cpZZZ.find(function (item) {
+          if (musicCurrentTime > item[0]) {
+            x = [];
+            x.push(item);
+          }
+        });
+        console.log(x[x.length - 1], musicCurrentTime, x1);
+        lyricListArray.find(function (item) {
+          if (x[x.length - 1][0].toString() === item.getAttribute('data-time')) {
+            //等于html里的歌词的data-time 就加个样式
+            item.setAttribute('class', 'shit');
+          }
+
+          if (x[x.length - 1][0].toString() != item.getAttribute('data-time')) {
+            item.removeAttribute('class', 'shit');
+          }
+        });
+
+        if (clearTimer === true) {
+          clearTimer = false;
+          inPlaySong = false;
+          console.log('已停止2222');
+          clearInterval(timer);
+        }
+
+        if (musicCurrentTime > lastTime) {
+          console.log('已停止');
+          clearInterval(timer);
+        }
+      }, 100);
     }
   }, {
     key: "pauseSong",
@@ -315,6 +385,7 @@ var Player = /*#__PURE__*/function () {
             ZZZ.push([time, ci]); //把时间戳和词 打包进数组
           });
         });
+        cpZZZ = ZZZ;
 
         _this4.$('.move').remove(); //删掉上一首残留的歌词节点
 
@@ -328,6 +399,11 @@ var Player = /*#__PURE__*/function () {
           //把歌词渲染到页面
           var p = document.createElement('p');
           p.setAttribute('data-time', ZZZ[i][0]);
+
+          if (i === ZZZ.length - 1) {
+            lastTime = ZZZ[i][0];
+          }
+
           p.innerText = ZZZ[i][1];
           document.querySelector('.move').appendChild(p);
         }
@@ -339,6 +415,12 @@ var Player = /*#__PURE__*/function () {
       var offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2;
       offset > 0 ? offset : 0;
       this.$('.move').style.transform = "translateY(-".concat(offset, "px)"); //操作transform语法
+    }
+  }, {
+    key: "geCiGunDong",
+    value: function geCiGunDong() {
+      console.log($1('.last-time'));
+      console.log(lastTime);
     }
   }]);
 
@@ -374,7 +456,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50678" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64521" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

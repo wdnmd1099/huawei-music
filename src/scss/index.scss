@@ -124,13 +124,13 @@ $color3: #0025f1;
     text-align: center;
     line-height: 2;
     overflow: hidden;
-
+    color: $color1;
     .move {
       transition: all .3s;
-      transform: translateY(-100px);
+      transform: translateY(00px);
         p {
-          font-size: 14px;
-          color: $color1;
+          // font-size: 14px;
+          
     
           &.current {
             color: white;
@@ -227,4 +227,8 @@ $color3: #0025f1;
   100% {
     transform: rotate(360deg);
   }
+}
+
+.shit{
+  color: white;
 }

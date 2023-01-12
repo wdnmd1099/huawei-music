@@ -1,167 +1,205 @@
 * {
   margin: 0;
-  padding: 0; }
+  padding: 0;
+}
 
 #player {
   height: 100vh;
   background: #060a3d;
-  overflow: hidden; }
-  #player .header {
-    height: 100px;
-    text-align: center; }
-    #player .header h1 {
-      color: #fff;
-      font-size: 20px;
-      padding-top: 20px; }
-    #player .header p {
-      color: #868aaf;
-      font-size: 12px; }
-    #player .header .balls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px; }
-      #player .header .balls span {
-        display: block;
-        width: 5px;
-        height: 5px;
-        background: #6a134f;
-        border-radius: 50%;
-        margin: 0 4px; }
-        #player .header .balls span.current-ball {
-          width: 8px;
-          height: 8px;
-          background: #db3baa; }
+  overflow: hidden;
+}
+#player .header {
+  height: 100px;
+  text-align: center;
+}
+#player .header h1 {
+  color: #fff;
+  font-size: 20px;
+  padding-top: 20px;
+}
+#player .header p {
+  color: #868aaf;
+  font-size: 12px;
+}
+#player .header .balls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+#player .header .balls span {
+  display: block;
+  width: 5px;
+  height: 5px;
+  background: #6a134f;
+  border-radius: 50%;
+  margin: 0 4px;
+}
+#player .header .balls span.current-ball {
+  width: 8px;
+  height: 8px;
+  background: #db3baa;
+}
 
 .page-effects {
   width: 200vw;
   height: calc(100vh - 280px);
   display: flex;
   align-items: center;
-  transition: transform 0.3s; }
-  .page-effects.page1 {
-    transform: translateX(0vw); }
-  .page-effects.page2 {
-    transform: translateX(-100vw); }
-  .page-effects .panel-effect {
-    width: 100vw;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; }
-    .page-effects .panel-effect .effect {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 40vh; }
-      .page-effects .panel-effect .effect > div {
-        background-size: contain;
-        position: absolute; }
-      .page-effects .panel-effect .effect .effect-1 {
-        background: url("/effect-no-move.e6a51026.svg") 0 0 no-repeat;
-        width: 70vw;
-        height: 70vw;
-        animation: rotate1 20s linear infinite; }
-      .page-effects .panel-effect .effect .effect-2 {
-        background: url("/effect-move1.8d0ce205.svg") 0 0 no-repeat;
-        width: 60vw;
-        height: 60vw;
-        animation: rotate1 10s linear infinite reverse; }
-      .page-effects .panel-effect .effect .effect-3 {
-        background: url("/effect-move2.143040a0.svg") 0 0 no-repeat;
-        width: 24vw;
-        height: 24vw;
-        animation: rotate1 10s linear infinite; }
-    .page-effects .panel-effect .lyric {
-      text-align: center; }
-      .page-effects .panel-effect .lyric p {
-        font-size: 13px;
-        color: #868aaf;
-        margin-top: 10px; }
-        .page-effects .panel-effect .lyric p.current-lyric {
-          color: #fff; }
-  .page-effects .lyrics-page {
-    border: 2px solid red;
-    width: 100vw;
-    height: 100%;
-    text-align: center;
-    line-height: 2;
-    overflow: hidden; }
-    .page-effects .lyrics-page .move {
-      transition: all .3s;
-      transform: translateY(-100px); }
-      .page-effects .lyrics-page .move p {
-        font-size: 14px;
-        color: #868aaf; }
-        .page-effects .lyrics-page .move p.current {
-          color: white; }
+  transition: transform 0.3s;
+}
+.page-effects.page1 {
+  transform: translateX(0vw);
+}
+.page-effects.page2 {
+  transform: translateX(-100vw);
+}
+.page-effects .panel-effect {
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.page-effects .panel-effect .effect {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+}
+.page-effects .panel-effect .effect > div {
+  background-size: contain;
+  position: absolute;
+}
+.page-effects .panel-effect .effect .effect-1 {
+  background: url("/effect-no-move.e6a51026.svg") 0 0 no-repeat;
+  width: 70vw;
+  height: 70vw;
+  animation: rotate1 20s linear infinite;
+}
+.page-effects .panel-effect .effect .effect-2 {
+  background: url("/effect-move1.8d0ce205.svg") 0 0 no-repeat;
+  width: 60vw;
+  height: 60vw;
+  animation: rotate1 10s linear infinite reverse;
+}
+.page-effects .panel-effect .effect .effect-3 {
+  background: url("/effect-move2.143040a0.svg") 0 0 no-repeat;
+  width: 24vw;
+  height: 24vw;
+  animation: rotate1 10s linear infinite;
+}
+.page-effects .panel-effect .lyric {
+  text-align: center;
+}
+.page-effects .panel-effect .lyric p {
+  font-size: 13px;
+  color: #868aaf;
+  margin-top: 10px;
+}
+.page-effects .panel-effect .lyric p.current-lyric {
+  color: #fff;
+}
+.page-effects .lyrics-page {
+  border: 2px solid red;
+  width: 100vw;
+  height: 100%;
+  text-align: center;
+  line-height: 2;
+  overflow: hidden;
+  color: #868aaf;
+}
+.page-effects .lyrics-page .move {
+  transition: all 0.3s;
+  transform: translateY(0px);
+}
+.page-effects .lyrics-page .move p.current {
+  color: white;
+}
 
 .footer {
-  height: 180px; }
-  .footer .buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center; }
-    .footer .buttons svg {
-      width: 24px;
-      height: 24px;
-      margin: 0 20px;
-      margin-top: 20px; }
-  .footer .actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px; }
-    .footer .actions svg {
-      width: 28px;
-      height: 28px; }
-      .footer .actions svg.btn-play-pause {
-        width: 50px;
-        height: 50px; }
-  .footer .bar-area {
-    color: #868aaf;
-    font-size: 12px;
-    display: flex;
-    padding: 0 20px;
-    margin-top: 20px;
-    align-items: center; }
-    .footer .bar-area .time-start {
-      order: 1;
-      width: 40px; }
-    .footer .bar-area .time-end {
-      order: 3;
-      width: 40px; }
-    .footer .bar-area .bar {
-      order: 2;
-      flex: 1;
-      height: 4px;
-      background: #0025f1;
-      border-radius: 2px;
-      margin: 0 10px; }
-      .footer .bar-area .bar .progress {
-        width: 0%;
-        transition: all 0.2s;
-        height: 100%;
-        border-radius: 2px;
-        background: #db3baa;
-        position: relative; }
-        .footer .bar-area .bar .progress::after {
-          content: "";
-          position: absolute;
-          right: -8px;
-          top: -7px;
-          display: block;
-          width: 16px;
-          height: 16px;
-          background: url(/progress.798a5c76.svg) 0 0 no-repeat;
-          background-size: contain; }
+  height: 180px;
+}
+.footer .buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer .buttons svg {
+  width: 24px;
+  height: 24px;
+  margin: 0 20px;
+  margin-top: 20px;
+}
+.footer .actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px;
+}
+.footer .actions svg {
+  width: 28px;
+  height: 28px;
+}
+.footer .actions svg.btn-play-pause {
+  width: 50px;
+  height: 50px;
+}
+.footer .bar-area {
+  color: #868aaf;
+  font-size: 12px;
+  display: flex;
+  padding: 0 20px;
+  margin-top: 20px;
+  align-items: center;
+}
+.footer .bar-area .time-start {
+  order: 1;
+  width: 40px;
+}
+.footer .bar-area .time-end {
+  order: 3;
+  width: 40px;
+}
+.footer .bar-area .bar {
+  order: 2;
+  flex: 1;
+  height: 4px;
+  background: #0025f1;
+  border-radius: 2px;
+  margin: 0 10px;
+}
+.footer .bar-area .bar .progress {
+  width: 0%;
+  transition: all 0.2s;
+  height: 100%;
+  border-radius: 2px;
+  background: #db3baa;
+  position: relative;
+}
+.footer .bar-area .bar .progress::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: -7px;
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url(/progress.798a5c76.svg) 0 0 no-repeat;
+  background-size: contain;
+}
 
 @keyframes rotate1 {
   0% {
-    transform: rotate(0); }
+    transform: rotate(0);
+  }
   100% {
-    transform: rotate(360deg); } }
-
+    transform: rotate(360deg);
+  }
+}
+.shit {
+  color: white;
+}
 
 /*# sourceMappingURL=/scss.8c25d549.css.map */
