@@ -150,12 +150,11 @@ var $$1 = function $$1(selector) {
   return document.querySelectorAll(selector);
 };
 
-var cpZZZ = [];
 var lastTime = 0;
-var musicCurrentTime = 100;
-var clearTimer = false;
-var inPlaySong = false;
-var unInPlaySong = true;
+var endSecondTime;
+var nextSong = false;
+var inPlaying = false;
+var clearLyricMoving = false;
 
 var Player = /*#__PURE__*/function () {
   function Player(node) {
@@ -196,51 +195,58 @@ var Player = /*#__PURE__*/function () {
         _this2.songList = data;
         _this2.audio.src = _this2.songList[_this2.currentIndex].url;
 
+        _this2.loadLyricEndTime();
+
         _this2.getNews();
       });
     }
   }, {
-    key: "swiper",
-    value: function swiper() {
-      var startX;
-      var endX;
-      var clock;
-      var self = this;
+    key: "lyricMove",
+    value: function lyricMove() {
+      var _this3 = this;
 
-      this.$('.page-effects').ontouchstart = function (e) {
-        startX = e.touches[0].pageX;
-      };
+      var currentSecondTime = 50;
+      var futureTime;
+      var lyricMoving = setInterval(function () {
+        currentSecondTime += 100; // console.log(currentSecondTime)
 
-      this.$(".page-effects").ontouchmove = function (e) {
-        var _this3 = this;
+        var pElementList = $$1('.move p');
 
-        if (clock) //假如clock存在
-          clearInterval(clock);
-        clock = setTimeout(function () {
-          endX = e.touches[0].pageX;
+        for (var i = 0; i < pElementList.length; i++) {
+          futureTime = pElementList[i].getAttribute('data-time');
 
-          if (endX - startX > 20) {
-            _this3.classList.remove('page2');
+          if (currentSecondTime > parseInt(futureTime)) {
+            if (i != 0) {
+              pElementList[i - 1].removeAttribute('class');
+            }
 
-            _this3.classList.add('page1');
+            if (i === 0) {
+              pElementList[0].setAttribute('class', 'currentLyric');
+            }
 
-            self.$('.ball2').classList.remove('current-ball');
-            self.$('.ball1').classList.add('current-ball');
-          } else if (endX - startX < 20) {
-            _this3.classList.remove('page1');
-
-            _this3.classList.add('page2');
-
-            self.$('.ball1').classList.remove('current-ball');
-            self.$('.ball2').classList.add('current-ball');
+            pElementList[i].setAttribute('class', 'currentLyric');
           }
-        }, 100);
-      };
+        }
+
+        if (clearLyricMoving === true) {
+          clearLyricMoving = false;
+
+          for (var _i = 0; _i < pElementList.length; _i++) {
+            pElementList[_i].removeAttribute('class');
+          }
+
+          clearInterval(lyricMoving);
+          return;
+        }
+
+        _this3.setLineToCenter($1('.currentLyric'));
+      }, 100);
     }
   }, {
     key: "bind",
     value: function bind() {
-      var self = this; // console.log(this)
+      var self = this;
+      console.log(this);
 
       this.$('.btn-play-pause').onclick = function () {
         if (this.classList.contains('playing')) {
@@ -258,19 +264,8 @@ var Player = /*#__PURE__*/function () {
           self.audio.src = self.songList[self.currentIndex].url;
         }
 
-        if (inPlaySong === true) {
-          //不在播放就不清timer，暂时这样写，有bug再修
-          clearTimer = true;
-          console.log('inPlaySong', inPlaySong);
-        }
-
-        if (unInPlaySong === false) {
-          clearTimer = true;
-          console.log('unInPlaySong', unInPlaySong);
-        }
-
-        self.getNews();
-        self.playSong();
+        nextSong = true;
+        self.getNews(); // self.playSong()
       };
 
       this.$('.btn-next').onclick = function () {
@@ -279,102 +274,31 @@ var Player = /*#__PURE__*/function () {
         } else {
           self.currentIndex = 0;
           self.audio.src = self.songList[self.currentIndex].url;
-        } // console.log(inPlaySong,'inplay')
-        // clearTimer = true
-        // console.log(inPlaySong)
-
-
-        if (inPlaySong === true) {
-          //不在播放就不清timer，暂时这样写，有bug再修
-          clearTimer = true;
-          console.log('inPlaySong', inPlaySong);
         }
 
-        if (unInPlaySong === false) {
-          clearTimer = true;
-          console.log('unInPlaySong', unInPlaySong);
-        }
-
-        console.log('下一首');
+        nextSong = true;
+        clearLyricMoving = true;
         self.getNews();
-        self.playSong();
+        setTimeout(function () {
+          self.playSong();
+        }, 110);
         console.log(self.songList[self.currentIndex].title);
       };
     }
   }, {
     key: "playSong",
     value: function playSong() {
-      var _this4 = this;
-
-      // console.log(cpZZZ)
       this.audio.play();
       this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
       this.$('.btn-play-pause').classList.remove('pause');
       this.$('.btn-play-pause').classList.add('playing');
-      unInPlaySong = false;
-      inPlaySong = true;
-      var lyricListArray = []; // 真正最后筛选的歌词数组
-
-      musicCurrentTime = 100;
-      clearInterval(timer);
-      var x = [];
-      var x1 = 0;
-      var timer = setInterval(function () {
-        x1 += 1;
-
-        if (x1 < 2) {
-          console.log(122);
-          var lyricList = document.getElementsByTagName('p');
-
-          for (var i = 0; i < lyricList.length; i++) {
-            if (lyricList[i].className === '') {
-              if (lyricList[i].innerHTML != '') {
-                lyricListArray.push(lyricList[i]); // console.log(lyricListArray[0],lyricList[i])
-              }
-            }
-          }
-        }
-
-        musicCurrentTime += 500;
-        cpZZZ.find(function (item) {
-          if (musicCurrentTime > item[0]) {
-            x = [];
-            x.push(item);
-          }
-        }); // console.log(x[x.length-1],musicCurrentTime,x1)
-
-        lyricListArray.find(function (item) {
-          if (x[x.length - 1][0].toString() === item.getAttribute('data-time')) {
-            //等于html里的歌词的data-time 就加个样式
-            item.setAttribute('class', 'shit');
-          }
-
-          if (x[x.length - 1][0].toString() != item.getAttribute('data-time')) {
-            item.removeAttribute('class', 'shit');
-          }
-        }); // console.log(clearTimer,123)
-
-        setTimeout(function () {
-          _this4.setLineToCenter();
-        }, 0);
-
-        if (clearTimer === true) {
-          clearTimer = false;
-          inPlaySong = false;
-          console.log('已停止2222');
-          clearInterval(timer);
-        }
-
-        if (musicCurrentTime > lastTime) {
-          console.log('已停止');
-          clearInterval(timer);
-        }
-      }, 500);
+      this.loadLyricStartTime();
+      inPlaying = true;
+      this.lyricMove();
     }
   }, {
     key: "pauseSong",
     value: function pauseSong() {
-      clearTimer = true;
       this.audio.pause();
       this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
       this.$('.btn-play-pause').classList.remove('playing');
@@ -383,12 +307,11 @@ var Player = /*#__PURE__*/function () {
   }, {
     key: "getNews",
     value: function getNews() {
-      var _this5 = this;
+      var _this4 = this;
 
       var ZZZ = [];
       var time = [];
       var ci;
-      var test;
       this.$('.song-title').innerText = this.songList[this.currentIndex].title; //获取歌名
 
       this.$('.singer').innerText = this.songList[this.currentIndex].author; //获取歌手名
@@ -398,7 +321,7 @@ var Player = /*#__PURE__*/function () {
         return res.text();
       }).then(function (data) {
         //console.log(data)
-        test = data.split(/\s/).filter(function (str) {
+        data.split(/\s/).filter(function (str) {
           return str.match(/\[.+?\]/);
         }).forEach(function (X) {
           ci = X.replace(/\[.+]/gm, ''); //筛选出歌词
@@ -413,9 +336,8 @@ var Player = /*#__PURE__*/function () {
             }
           });
         });
-        cpZZZ = ZZZ;
 
-        _this5.$('.move').remove(); //删掉上一首残留的歌词节点
+        _this4.$('.move').remove(); //删掉上一首残留的歌词节点
 
 
         var move1 = document.createElement('div'); //创建新的歌词节点加到页面上
@@ -430,10 +352,7 @@ var Player = /*#__PURE__*/function () {
 
           if (i === ZZZ.length - 1) {
             lastTime = ZZZ[i][0];
-          } // if( i===0 ) {
-          //     p.setAttribute('class', 'shit')
-          // }
-
+          }
 
           p.innerText = ZZZ[i][1];
           document.querySelector('.move').appendChild(p);
@@ -441,10 +360,121 @@ var Player = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "loadLyricEndTime",
+    value: function loadLyricEndTime() {
+      var _this5 = this;
+
+      // 把歌词结束时间渲染到进度条后
+      this.audio.onloadeddata = function () {
+        $1('.time-end').innerText = _this5.secondChangeMinSec(_this5.audio.duration);
+        endSecondTime = _this5.audio.duration;
+      };
+    }
+  }, {
+    key: "loadLyricStartTime",
+    value: function loadLyricStartTime() {
+      var _this6 = this;
+
+      // 当前歌曲时间
+      var startTime = 0;
+      var minute = 0;
+      var second = 0;
+      var currentSecondTime = 0;
+      var goingTime = setInterval(function () {
+        startTime += 1;
+        currentSecondTime += 1;
+        second = startTime;
+
+        if (startTime > 60) {
+          minute += 1;
+          second = 0;
+          startTime = 0;
+        }
+
+        var currentTime = "".concat(minute.toString().padStart(2, '0'), ":").concat(second.toString().padStart(2, '0')); // console.log(currentTime)
+
+        $1('.time-start').innerText = currentTime;
+
+        _this6.barMoving(currentSecondTime);
+
+        if (currentTime === $1('.time-end').innerText) {
+          //歌曲结束时解除计时器
+          clearInterval(goingTime);
+        }
+
+        if (nextSong === true) {
+          nextSong = false;
+          clearInterval(goingTime);
+        }
+      }, 1000);
+    }
+  }, {
+    key: "secondChangeMinSec",
+    value: function secondChangeMinSec(val) {
+      //把秒转换为分秒结构
+      var minute = parseInt(val / 60);
+      var minChangeSecond = (val / 60).toString();
+      var second = parseInt(parseInt(minChangeSecond[2] + minChangeSecond[3]) * 0.6);
+
+      if (minute < 10) {
+        minute = minute.toString().padStart(2, '0');
+      }
+
+      if (second < 10) {
+        second = second.padStart(2, '0');
+      }
+
+      var loadTime = "".concat(minute, ":").concat(second);
+      return loadTime;
+    }
+  }, {
+    key: "barMoving",
+    value: function barMoving(currentSecondTime) {
+      // 进度条按当前歌曲时间移动
+      this.$('.progress').style.width = "".concat(parseInt(currentSecondTime / endSecondTime * 100), "%");
+    }
+  }, {
+    key: "swiper",
+    value: function swiper() {
+      var startX;
+      var endX;
+      var clock;
+      var self = this;
+
+      this.$('.page-effects').ontouchstart = function (e) {
+        startX = e.touches[0].pageX;
+      };
+
+      this.$(".page-effects").ontouchmove = function (e) {
+        var _this7 = this;
+
+        if (clock) //假如clock存在
+          clearInterval(clock);
+        clock = setTimeout(function () {
+          endX = e.touches[0].pageX;
+
+          if (endX - startX > 20) {
+            _this7.classList.remove('page2');
+
+            _this7.classList.add('page1');
+
+            self.$('.ball2').classList.remove('current-ball');
+            self.$('.ball1').classList.add('current-ball');
+          } else if (endX - startX < 20) {
+            _this7.classList.remove('page1');
+
+            _this7.classList.add('page2');
+
+            self.$('.ball1').classList.remove('current-ball');
+            self.$('.ball2').classList.add('current-ball');
+          }
+        }, 100);
+      };
+    }
+  }, {
     key: "setLineToCenter",
-    value: function setLineToCenter() {
-      var x2 = document.querySelector('.shit');
-      var offset = x2.offsetTop - this.$('.lyrics-page').offsetHeight / 2;
+    value: function setLineToCenter(node) {
+      var offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2;
       offset > 0 ? offset : 0;
       this.$('.move').style.transform = "translateY(-".concat(offset, "px)"); //操作transform语法
     }
