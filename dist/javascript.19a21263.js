@@ -153,8 +153,9 @@ var $$1 = function $$1(selector) {
 var lastTime = 0;
 var endSecondTime;
 var nextSong = false;
-var inPlaying = false;
 var clearLyricMoving = false;
+var _pauseSong = false;
+var saveLyricTime = undefined;
 
 var Player = /*#__PURE__*/function () {
   function Player(node) {
@@ -201,30 +202,63 @@ var Player = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "playSong",
+    value: function playSong() {
+      this.audio.play();
+      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
+      this.$('.btn-play-pause').classList.remove('pause');
+      this.$('.btn-play-pause').classList.add('playing');
+      this.loadLyricStartTime();
+
+      if (_pauseSong === true) {
+        _pauseSong = false;
+        this.lyricMove(saveLyricTime);
+        return;
+      }
+
+      this.lyricMove();
+    }
+  }, {
+    key: "pauseSong",
+    value: function pauseSong() {
+      _pauseSong = true;
+      this.audio.pause();
+      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
+      this.$('.btn-play-pause').classList.remove('playing');
+      this.$('.btn-play-pause').classList.add('pause');
+    }
+  }, {
     key: "lyricMove",
-    value: function lyricMove() {
+    value: function lyricMove(time) {
       var _this3 = this;
 
-      var currentSecondTime = 50;
+      var currentSecondTime = time | 50;
       var futureTime;
       var lyricMoving = setInterval(function () {
-        currentSecondTime += 100; // console.log(currentSecondTime)
+        if (_pauseSong === true) {
+          // 如果暂停状态存在，记录当前歌词读到的时间，暴露出去
+          saveLyricTime = currentSecondTime;
+          clearInterval(lyricMoving);
+          return;
+        }
 
+        currentSecondTime += 100;
         var pElementList = $$1('.move p');
 
         for (var i = 0; i < pElementList.length; i++) {
           futureTime = pElementList[i].getAttribute('data-time');
 
           if (currentSecondTime > parseInt(futureTime)) {
+            //当前时间大于data-time的时间
             if (i != 0) {
-              pElementList[i - 1].removeAttribute('class');
+              pElementList[i - 1].removeAttribute('class'); //删掉当前后面的class
             }
 
             if (i === 0) {
-              pElementList[0].setAttribute('class', 'currentLyric');
+              pElementList[0].setAttribute('class', 'currentLyric'); //把第一个p元素加class，方便歌词滚动函数跑
             }
 
-            pElementList[i].setAttribute('class', 'currentLyric');
+            pElementList[i].setAttribute('class', 'currentLyric'); //对当前p元素加class
           }
         }
 
@@ -265,7 +299,11 @@ var Player = /*#__PURE__*/function () {
         }
 
         nextSong = true;
-        self.getNews(); // self.playSong()
+        clearLyricMoving = true;
+        self.getNews();
+        setTimeout(function () {
+          self.playSong();
+        }, 110);
       };
 
       this.$('.btn-next').onclick = function () {
@@ -284,25 +322,6 @@ var Player = /*#__PURE__*/function () {
         }, 110);
         console.log(self.songList[self.currentIndex].title);
       };
-    }
-  }, {
-    key: "playSong",
-    value: function playSong() {
-      this.audio.play();
-      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
-      this.$('.btn-play-pause').classList.remove('pause');
-      this.$('.btn-play-pause').classList.add('playing');
-      this.loadLyricStartTime();
-      inPlaying = true;
-      this.lyricMove();
-    }
-  }, {
-    key: "pauseSong",
-    value: function pauseSong() {
-      this.audio.pause();
-      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
-      this.$('.btn-play-pause').classList.remove('playing');
-      this.$('.btn-play-pause').classList.add('pause');
     }
   }, {
     key: "getNews",
@@ -518,7 +537,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58987" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54280" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

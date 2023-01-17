@@ -8,8 +8,10 @@ const $$1 = selector => document.querySelectorAll(selector)
 let lastTime = 0
 let endSecondTime ;
 let nextSong = false
-let inPlaying = false
 let clearLyricMoving = false
+let pauseSong = false
+let saveLyricTime = undefined
+
 class Player{
     constructor(node){
         this.root = typeof node === 'string' ? document.querySelector(node) : node   //要么是字符串 要么是DOM节点 字符串就直接去找
@@ -37,24 +39,50 @@ class Player{
                 this.getNews();
             })
     }
-    
-    lyricMove(){
-        let currentSecondTime = 50
+    playSong(){
+        this.audio.play()
+        this.$('.btn-play-pause').querySelector('use')
+        .setAttribute('xlink:href','#icon-pause')
+        this.$('.btn-play-pause').classList.remove('pause')
+        this.$('.btn-play-pause').classList.add('playing')
+        this.loadLyricStartTime()
+        if( pauseSong === true){
+            pauseSong = false
+            this.lyricMove(saveLyricTime)
+            return
+        }
+        this.lyricMove()
+    }
+    pauseSong(){   
+        pauseSong = true
+        this.audio.pause()
+        this.$('.btn-play-pause').querySelector('use')
+        .setAttribute('xlink:href','#icon-play')  
+        this.$('.btn-play-pause').classList.remove('playing')
+        this.$('.btn-play-pause').classList.add('pause')
+    }
+
+    lyricMove(time){
+        let currentSecondTime = time | 50
         let futureTime
         const lyricMoving = setInterval(()=>{
+            if( pauseSong === true){ // 如果暂停状态存在，记录当前歌词读到的时间，暴露出去
+                saveLyricTime = currentSecondTime
+                clearInterval(lyricMoving)
+                return 
+            }
             currentSecondTime += 100
-            // console.log(currentSecondTime)
             const pElementList = $$1('.move p')
         for(let i = 0; i<pElementList.length ; i++){
             futureTime = pElementList[i].getAttribute('data-time')
-            if( currentSecondTime > parseInt(futureTime) ){
+            if( currentSecondTime > parseInt(futureTime) ){ //当前时间大于data-time的时间
                 if(i!=0){
-                    pElementList[i-1].removeAttribute('class')
+                    pElementList[i-1].removeAttribute('class') //删掉当前后面的class
                 }
                 if(i===0){
-                    pElementList[0].setAttribute('class','currentLyric')
+                    pElementList[0].setAttribute('class','currentLyric') //把第一个p元素加class，方便歌词滚动函数跑
                 }
-             pElementList[i].setAttribute('class','currentLyric')
+             pElementList[i].setAttribute('class','currentLyric') //对当前p元素加class
             }
         }
         if(clearLyricMoving === true){
@@ -88,8 +116,11 @@ class Player{
                 self.audio.src  =  self.songList[self.currentIndex].url
             }
             nextSong = true
+            clearLyricMoving = true
             self.getNews()
-            // self.playSong()
+            setTimeout(()=>{
+                self.playSong()
+            },110)
             
         }
         this.$('.btn-next').onclick = function(){
@@ -112,24 +143,7 @@ class Player{
     }
 
 
-    playSong(){
-        this.audio.play()
-        this.$('.btn-play-pause').querySelector('use')
-        .setAttribute('xlink:href','#icon-pause')
-        this.$('.btn-play-pause').classList.remove('pause')
-        this.$('.btn-play-pause').classList.add('playing')
-        this.loadLyricStartTime()
-        inPlaying = true
-        this.lyricMove()
-    }
-    pauseSong(){   
-        this.audio.pause()
-        this.$('.btn-play-pause').querySelector('use')
-        .setAttribute('xlink:href','#icon-play')  
-        this.$('.btn-play-pause').classList.remove('playing')
-        this.$('.btn-play-pause').classList.add('pause')
-    }
-
+    
     getNews(){
         let ZZZ = [];
         let time = [] ;
