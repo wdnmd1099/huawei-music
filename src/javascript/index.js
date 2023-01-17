@@ -10,6 +10,7 @@ let lastTime = 0
 let musicCurrentTime = 100
 let clearTimer = false
 let inPlaySong = false
+let unInPlaySong = true
 class Player{
     constructor(node){
         this.root = typeof node === 'string' ? document.querySelector(node) : node   //要么是字符串 要么是DOM节点 字符串就直接去找
@@ -21,7 +22,7 @@ class Player{
         this.start();
         this.bind();
         this.swiper();
-        this.setLineToCenter(this.$('.move .current'))
+        // this.setLineToCenter(document.querySelector('.shit'))
         // this.geCiGunDong()
     } 
 
@@ -37,55 +38,6 @@ class Player{
             })
     }
 
-    bind(){
-        let self = this
-        // console.log(this)
-        this.$('.btn-play-pause').onclick = function(){
-           if(this.classList.contains('playing')){
-            self.pauseSong()
-           }else if(this.classList.contains('pause')){
-            self.playSong()
-           } 
-        } 
-        this.$('.btn-pre').onclick = function(){
-            if(self.currentIndex<=self.songList.length-1 && self.currentIndex>0){
-                self.audio.src  =  self.songList[self.currentIndex-=1].url
-            }else{
-                self.currentIndex=self.songList.length-1;
-                self.audio.src  =  self.songList[self.currentIndex].url
-            }
-            if(inPlaySong === true){  //不在播放就不清timer，暂时这样写，有bug再修
-                clearTimer = true
-            }
-            clearTimer = true
-            self.getNews()
-            self.playSong()
-            
-            
-        }
-        this.$('.btn-next').onclick = function(){
-            if(self.currentIndex<self.songList.length-1){
-                self.audio.src  =  self.songList[self.currentIndex+=1].url
-            }else{
-                self.currentIndex=0;
-                self.audio.src  =  self.songList[self.currentIndex].url
-            }
-            if(inPlaySong === true){ //不在播放就不清timer，暂时这样写，有bug再修
-                clearTimer = true
-            }
-            console.log('下一首')
-            self.getNews()
-            self.playSong()
-            
-            console.log(self.songList[self.currentIndex].title)
-        }
-       
-
-
-    }
-
-
-    
     swiper(){
         let startX;
         let endX;
@@ -116,13 +68,73 @@ class Player{
           
     }
 
+    
+    bind(){
+        let self = this
+        // console.log(this)
+        this.$('.btn-play-pause').onclick = function(){
+           if(this.classList.contains('playing')){
+            self.pauseSong()
+           }else if(this.classList.contains('pause')){
+            self.playSong()
+           } 
+        } 
+        this.$('.btn-pre').onclick = function(){
+            if(self.currentIndex<=self.songList.length-1 && self.currentIndex>0){
+                self.audio.src  =  self.songList[self.currentIndex-=1].url
+            }else{
+                self.currentIndex=self.songList.length-1;
+                self.audio.src  =  self.songList[self.currentIndex].url
+            }
+            if(inPlaySong === true){ //不在播放就不清timer，暂时这样写，有bug再修
+                clearTimer = true
+                console.log('inPlaySong',inPlaySong)
+            }
+            if(unInPlaySong === false){
+                clearTimer = true
+                console.log('unInPlaySong',unInPlaySong)
+            }
+            self.getNews()
+            self.playSong()
+            
+            
+        }
+        this.$('.btn-next').onclick = function(){
+            if(self.currentIndex<self.songList.length-1){
+                self.audio.src  =  self.songList[self.currentIndex+=1].url
+            }else{
+                self.currentIndex=0;
+                self.audio.src  =  self.songList[self.currentIndex].url
+            }
+            // console.log(inPlaySong,'inplay')
+            // clearTimer = true
+            // console.log(inPlaySong)
+            if(inPlaySong === true){ //不在播放就不清timer，暂时这样写，有bug再修
+                clearTimer = true
+                console.log('inPlaySong',inPlaySong)
+            }
+            if(unInPlaySong === false){
+                clearTimer = true
+                console.log('unInPlaySong',unInPlaySong)
+            }
+            console.log('下一首')
+            self.getNews()
+            self.playSong()
+            
+            console.log(self.songList[self.currentIndex].title)
+        }
+       
+
+
+    }
     playSong(){
+        // console.log(cpZZZ)
         this.audio.play()
         this.$('.btn-play-pause').querySelector('use')
         .setAttribute('xlink:href','#icon-pause')
         this.$('.btn-play-pause').classList.remove('pause')
         this.$('.btn-play-pause').classList.add('playing')
-        
+        unInPlaySong = false
         inPlaySong = true
         let lyricListArray = []  // 真正最后筛选的歌词数组
         musicCurrentTime = 100
@@ -135,21 +147,23 @@ class Player{
                 console.log(122)
                 const lyricList =  document.getElementsByTagName('p')
                 for(let i = 0;i<lyricList.length;i++){
-                    if( lyricList[i].className === '' ){
-                        lyricListArray.push(lyricList[i])
+                    if( lyricList[i].className === ''){
+                        if(lyricList[i].innerHTML != ''){
+                            lyricListArray.push(lyricList[i])
+                            // console.log(lyricListArray[0],lyricList[i])
+                        }
                     }
                 }
-                
+              
             }
-            musicCurrentTime += 100
+            musicCurrentTime += 500
             cpZZZ.find(item => {
             if(musicCurrentTime > item[0]){
                 x=[]
                 x.push(item)
             }
         })
-            console.log(x[x.length-1],musicCurrentTime,x1)
-
+            // console.log(x[x.length-1],musicCurrentTime,x1)
             lyricListArray.find((item)=>{ 
                 if(x[x.length-1][0].toString() === item.getAttribute('data-time')){ //等于html里的歌词的data-time 就加个样式
                     item.setAttribute('class','shit')
@@ -158,6 +172,11 @@ class Player{
                     item.removeAttribute('class','shit')
                 }
             })
+            // console.log(clearTimer,123)
+            setTimeout(() => {
+                this.setLineToCenter()
+            }, 0);
+            
         if(clearTimer === true){
             clearTimer = false
             inPlaySong = false
@@ -169,13 +188,14 @@ class Player{
             console.log('已停止')
             clearInterval(timer)
           }
-        },100)
+        },500)
 
        
 
 
     }
-    pauseSong(){    
+    pauseSong(){   
+        clearTimer = true
         this.audio.pause()
         this.$('.btn-play-pause').querySelector('use')
         .setAttribute('xlink:href','#icon-play')  
@@ -202,7 +222,10 @@ class Player{
             .forEach(t=>{ 
              t = t.replace(/[\[\]]/g,'')   
              time = parseInt(t.slice(0,2))*60*1000 + parseInt(t.slice(3,5))*1000 + parseInt(t.slice(6)) //转成毫秒数
-             ZZZ.push([time, ci])  //把时间戳和词 打包进数组
+            
+             if(ci != ''){
+                ZZZ.push([time, ci])  //把时间戳和词 打包进数组
+             }
         })
         })
         cpZZZ = ZZZ 
@@ -216,14 +239,18 @@ class Player{
                     if( i === (ZZZ.length-1)){
                         lastTime =  ZZZ[i][0]
                     }
+                    // if( i===0 ) {
+                    //     p.setAttribute('class', 'shit')
+                    // }
                     p.innerText=ZZZ[i][1]
                     document.querySelector('.move').appendChild(p)
                 }
             })
     }
 
-    setLineToCenter(node){
-       let offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2 ;
+    setLineToCenter(){
+        const x2 = document.querySelector('.shit')
+       let offset = x2.offsetTop - this.$('.lyrics-page').offsetHeight / 2 ;
         offset > 0 ? offset : 0 ; 
         this.$('.move').style.transform = `translateY(-${offset}px)`  //操作transform语法
     }

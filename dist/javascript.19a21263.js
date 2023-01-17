@@ -155,6 +155,7 @@ var lastTime = 0;
 var musicCurrentTime = 100;
 var clearTimer = false;
 var inPlaySong = false;
+var unInPlaySong = true;
 
 var Player = /*#__PURE__*/function () {
   function Player(node) {
@@ -178,8 +179,8 @@ var Player = /*#__PURE__*/function () {
 
     this.start();
     this.bind();
-    this.swiper();
-    this.setLineToCenter(this.$('.move .current')); // this.geCiGunDong()
+    this.swiper(); // this.setLineToCenter(document.querySelector('.shit'))
+    // this.geCiGunDong()
   }
 
   _createClass(Player, [{
@@ -197,56 +198,6 @@ var Player = /*#__PURE__*/function () {
 
         _this2.getNews();
       });
-    }
-  }, {
-    key: "bind",
-    value: function bind() {
-      var self = this; // console.log(this)
-
-      this.$('.btn-play-pause').onclick = function () {
-        if (this.classList.contains('playing')) {
-          self.pauseSong();
-        } else if (this.classList.contains('pause')) {
-          self.playSong();
-        }
-      };
-
-      this.$('.btn-pre').onclick = function () {
-        if (self.currentIndex <= self.songList.length - 1 && self.currentIndex > 0) {
-          self.audio.src = self.songList[self.currentIndex -= 1].url;
-        } else {
-          self.currentIndex = self.songList.length - 1;
-          self.audio.src = self.songList[self.currentIndex].url;
-        }
-
-        if (inPlaySong === true) {
-          //不在播放就不清timer，暂时这样写，有bug再修
-          clearTimer = true;
-        }
-
-        clearTimer = true;
-        self.getNews();
-        self.playSong();
-      };
-
-      this.$('.btn-next').onclick = function () {
-        if (self.currentIndex < self.songList.length - 1) {
-          self.audio.src = self.songList[self.currentIndex += 1].url;
-        } else {
-          self.currentIndex = 0;
-          self.audio.src = self.songList[self.currentIndex].url;
-        }
-
-        if (inPlaySong === true) {
-          //不在播放就不清timer，暂时这样写，有bug再修
-          clearTimer = true;
-        }
-
-        console.log('下一首');
-        self.getNews();
-        self.playSong();
-        console.log(self.songList[self.currentIndex].title);
-      };
     }
   }, {
     key: "swiper",
@@ -287,12 +238,80 @@ var Player = /*#__PURE__*/function () {
       };
     }
   }, {
+    key: "bind",
+    value: function bind() {
+      var self = this; // console.log(this)
+
+      this.$('.btn-play-pause').onclick = function () {
+        if (this.classList.contains('playing')) {
+          self.pauseSong();
+        } else if (this.classList.contains('pause')) {
+          self.playSong();
+        }
+      };
+
+      this.$('.btn-pre').onclick = function () {
+        if (self.currentIndex <= self.songList.length - 1 && self.currentIndex > 0) {
+          self.audio.src = self.songList[self.currentIndex -= 1].url;
+        } else {
+          self.currentIndex = self.songList.length - 1;
+          self.audio.src = self.songList[self.currentIndex].url;
+        }
+
+        if (inPlaySong === true) {
+          //不在播放就不清timer，暂时这样写，有bug再修
+          clearTimer = true;
+          console.log('inPlaySong', inPlaySong);
+        }
+
+        if (unInPlaySong === false) {
+          clearTimer = true;
+          console.log('unInPlaySong', unInPlaySong);
+        }
+
+        self.getNews();
+        self.playSong();
+      };
+
+      this.$('.btn-next').onclick = function () {
+        if (self.currentIndex < self.songList.length - 1) {
+          self.audio.src = self.songList[self.currentIndex += 1].url;
+        } else {
+          self.currentIndex = 0;
+          self.audio.src = self.songList[self.currentIndex].url;
+        } // console.log(inPlaySong,'inplay')
+        // clearTimer = true
+        // console.log(inPlaySong)
+
+
+        if (inPlaySong === true) {
+          //不在播放就不清timer，暂时这样写，有bug再修
+          clearTimer = true;
+          console.log('inPlaySong', inPlaySong);
+        }
+
+        if (unInPlaySong === false) {
+          clearTimer = true;
+          console.log('unInPlaySong', unInPlaySong);
+        }
+
+        console.log('下一首');
+        self.getNews();
+        self.playSong();
+        console.log(self.songList[self.currentIndex].title);
+      };
+    }
+  }, {
     key: "playSong",
     value: function playSong() {
+      var _this4 = this;
+
+      // console.log(cpZZZ)
       this.audio.play();
       this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
       this.$('.btn-play-pause').classList.remove('pause');
       this.$('.btn-play-pause').classList.add('playing');
+      unInPlaySong = false;
       inPlaySong = true;
       var lyricListArray = []; // 真正最后筛选的歌词数组
 
@@ -309,19 +328,21 @@ var Player = /*#__PURE__*/function () {
 
           for (var i = 0; i < lyricList.length; i++) {
             if (lyricList[i].className === '') {
-              lyricListArray.push(lyricList[i]);
+              if (lyricList[i].innerHTML != '') {
+                lyricListArray.push(lyricList[i]); // console.log(lyricListArray[0],lyricList[i])
+              }
             }
           }
         }
 
-        musicCurrentTime += 100;
+        musicCurrentTime += 500;
         cpZZZ.find(function (item) {
           if (musicCurrentTime > item[0]) {
             x = [];
             x.push(item);
           }
-        });
-        console.log(x[x.length - 1], musicCurrentTime, x1);
+        }); // console.log(x[x.length-1],musicCurrentTime,x1)
+
         lyricListArray.find(function (item) {
           if (x[x.length - 1][0].toString() === item.getAttribute('data-time')) {
             //等于html里的歌词的data-time 就加个样式
@@ -331,7 +352,11 @@ var Player = /*#__PURE__*/function () {
           if (x[x.length - 1][0].toString() != item.getAttribute('data-time')) {
             item.removeAttribute('class', 'shit');
           }
-        });
+        }); // console.log(clearTimer,123)
+
+        setTimeout(function () {
+          _this4.setLineToCenter();
+        }, 0);
 
         if (clearTimer === true) {
           clearTimer = false;
@@ -344,11 +369,12 @@ var Player = /*#__PURE__*/function () {
           console.log('已停止');
           clearInterval(timer);
         }
-      }, 100);
+      }, 500);
     }
   }, {
     key: "pauseSong",
     value: function pauseSong() {
+      clearTimer = true;
       this.audio.pause();
       this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
       this.$('.btn-play-pause').classList.remove('playing');
@@ -357,7 +383,7 @@ var Player = /*#__PURE__*/function () {
   }, {
     key: "getNews",
     value: function getNews() {
-      var _this4 = this;
+      var _this5 = this;
 
       var ZZZ = [];
       var time = [];
@@ -382,12 +408,14 @@ var Player = /*#__PURE__*/function () {
             t = t.replace(/[\[\]]/g, '');
             time = parseInt(t.slice(0, 2)) * 60 * 1000 + parseInt(t.slice(3, 5)) * 1000 + parseInt(t.slice(6)); //转成毫秒数
 
-            ZZZ.push([time, ci]); //把时间戳和词 打包进数组
+            if (ci != '') {
+              ZZZ.push([time, ci]); //把时间戳和词 打包进数组
+            }
           });
         });
         cpZZZ = ZZZ;
 
-        _this4.$('.move').remove(); //删掉上一首残留的歌词节点
+        _this5.$('.move').remove(); //删掉上一首残留的歌词节点
 
 
         var move1 = document.createElement('div'); //创建新的歌词节点加到页面上
@@ -402,7 +430,10 @@ var Player = /*#__PURE__*/function () {
 
           if (i === ZZZ.length - 1) {
             lastTime = ZZZ[i][0];
-          }
+          } // if( i===0 ) {
+          //     p.setAttribute('class', 'shit')
+          // }
+
 
           p.innerText = ZZZ[i][1];
           document.querySelector('.move').appendChild(p);
@@ -411,8 +442,9 @@ var Player = /*#__PURE__*/function () {
     }
   }, {
     key: "setLineToCenter",
-    value: function setLineToCenter(node) {
-      var offset = node.offsetTop - this.$('.lyrics-page').offsetHeight / 2;
+    value: function setLineToCenter() {
+      var x2 = document.querySelector('.shit');
+      var offset = x2.offsetTop - this.$('.lyrics-page').offsetHeight / 2;
       offset > 0 ? offset : 0;
       this.$('.move').style.transform = "translateY(-".concat(offset, "px)"); //操作transform语法
     }
@@ -456,7 +488,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64521" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58987" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
