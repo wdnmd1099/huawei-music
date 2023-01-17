@@ -11,7 +11,7 @@ let nextSong = false
 let clearLyricMoving = false
 let pauseSong = false
 let saveLyricTime = undefined
-
+let saveLyricStartTime = {minute:0,second:0,currentSecondTime:0}
 class Player{
     constructor(node){
         this.root = typeof node === 'string' ? document.querySelector(node) : node   //要么是字符串 要么是DOM节点 字符串就直接去找
@@ -39,28 +39,7 @@ class Player{
                 this.getNews();
             })
     }
-    playSong(){
-        this.audio.play()
-        this.$('.btn-play-pause').querySelector('use')
-        .setAttribute('xlink:href','#icon-pause')
-        this.$('.btn-play-pause').classList.remove('pause')
-        this.$('.btn-play-pause').classList.add('playing')
-        this.loadLyricStartTime()
-        if( pauseSong === true){
-            pauseSong = false
-            this.lyricMove(saveLyricTime)
-            return
-        }
-        this.lyricMove()
-    }
-    pauseSong(){   
-        pauseSong = true
-        this.audio.pause()
-        this.$('.btn-play-pause').querySelector('use')
-        .setAttribute('xlink:href','#icon-play')  
-        this.$('.btn-play-pause').classList.remove('playing')
-        this.$('.btn-play-pause').classList.add('pause')
-    }
+    
 
     lyricMove(time){
         let currentSecondTime = time | 50
@@ -97,50 +76,7 @@ class Player{
         },100)
     }
 
-
-    bind(){
-        let self = this
-        console.log(this)
-        this.$('.btn-play-pause').onclick = function(){
-           if(this.classList.contains('playing')){
-            self.pauseSong()
-           }else if(this.classList.contains('pause')){
-            self.playSong()
-           } 
-        } 
-        this.$('.btn-pre').onclick = function(){
-            if(self.currentIndex<=self.songList.length-1 && self.currentIndex>0){
-                self.audio.src  =  self.songList[self.currentIndex-=1].url
-            }else{
-                self.currentIndex=self.songList.length-1;
-                self.audio.src  =  self.songList[self.currentIndex].url
-            }
-            nextSong = true
-            clearLyricMoving = true
-            self.getNews()
-            setTimeout(()=>{
-                self.playSong()
-            },110)
-            
-        }
-        this.$('.btn-next').onclick = function(){
-            if(self.currentIndex<self.songList.length-1){
-                self.audio.src  =  self.songList[self.currentIndex+=1].url
-            }else{
-                self.currentIndex=0;
-                self.audio.src  =  self.songList[self.currentIndex].url
-            }
-            nextSong = true
-            clearLyricMoving = true
-            self.getNews()
-            setTimeout(()=>{
-                self.playSong()
-            },110)
-           
-            
-            console.log(self.songList[self.currentIndex].title)
-        }
-    }
+    
 
 
     
@@ -190,22 +126,140 @@ class Player{
         this.audio.onloadeddata = ()=>{
             $1('.time-end').innerText = this.secondChangeMinSec(this.audio.duration)
             endSecondTime = this.audio.duration
-            
         }
     }
-    loadLyricStartTime(){   // 当前歌曲时间
-        let startTime = 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    playSong(){
+        this.audio.play()
+        this.$('.btn-play-pause').querySelector('use')
+        .setAttribute('xlink:href','#icon-pause')
+        this.$('.btn-play-pause').classList.remove('pause')
+        this.$('.btn-play-pause').classList.add('playing')
+        
+        if( pauseSong === true){
+            pauseSong = false
+            this.lyricMove(saveLyricTime)
+            this.loadLyricStartTime(saveLyricStartTime)
+            return
+        }
+        this.loadLyricStartTime()
+        this.lyricMove()
+    }
+    pauseSong(){   
+        pauseSong = true
+        this.audio.pause()
+        this.$('.btn-play-pause').querySelector('use')
+        .setAttribute('xlink:href','#icon-play')  
+        this.$('.btn-play-pause').classList.remove('playing')
+        this.$('.btn-play-pause').classList.add('pause')
+    }
+    bind(){
+        let self = this
+        console.log(this)
+        this.$('.btn-play-pause').onclick = function(){
+           if(this.classList.contains('playing')){
+            self.pauseSong()
+           }else if(this.classList.contains('pause')){
+            self.playSong()
+           } 
+        } 
+        this.$('.btn-pre').onclick = function(){
+            if(self.currentIndex<=self.songList.length-1 && self.currentIndex>0){
+                self.audio.src  =  self.songList[self.currentIndex-=1].url
+            }else{
+                self.currentIndex=self.songList.length-1;
+                self.audio.src  =  self.songList[self.currentIndex].url
+            }
+            nextSong = true
+            clearLyricMoving = true
+            self.getNews()
+            setTimeout(()=>{
+                self.playSong()
+            },110)
+            
+        }
+        this.$('.btn-next').onclick = function(){
+            if(self.currentIndex<self.songList.length-1){
+                self.audio.src  =  self.songList[self.currentIndex+=1].url
+            }else{
+                self.currentIndex=0;
+                self.audio.src  =  self.songList[self.currentIndex].url
+            }
+            nextSong = true
+            clearLyricMoving = true
+            self.getNews()
+            setTimeout(()=>{
+                self.playSong()
+            },110)
+           
+            
+            console.log(self.songList[self.currentIndex].title)
+        }
+    }
+    loadLyricStartTime(Time){   // 当前歌曲时间
+        // console.log(Time)
         let minute = 0
         let second = 0
         let currentSecondTime = 0
+        if(Time){
+            minute = Time.minute
+            second = Time.second
+            currentSecondTime = Time.currentSecondTime
+        }
+        let x = 0
         const goingTime = setInterval(() => {
-            startTime += 1
-            currentSecondTime += 1
-            second = startTime
-            if(startTime > 60){
+            x+=1
+            if( pauseSong === true){
+                saveLyricStartTime = {minute:minute,second:second,currentSecondTime:currentSecondTime}
+                clearInterval(goingTime)
+                return
+            }
+            if( x === 10 ){
+                x=0
+                second += 1
+                currentSecondTime += 1
+            }
+            
+            if(second > 60){
                 minute += 1
                 second = 0
-                startTime = 0
             }
             const currentTime = `${minute.toString().padStart(2,'0')}:${second.toString().padStart(2,'0')}`
             // console.log(currentTime)
@@ -218,8 +272,44 @@ class Player{
                 nextSong = false
                 clearInterval(goingTime)
             }
-        }, 1000);
+        }, 100);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     secondChangeMinSec(val){ //把秒转换为分秒结构
         let minute = parseInt(val/60) 
         const minChangeSecond = (val/60).toString()

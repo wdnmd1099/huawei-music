@@ -156,6 +156,11 @@ var nextSong = false;
 var clearLyricMoving = false;
 var _pauseSong = false;
 var saveLyricTime = undefined;
+var saveLyricStartTime = {
+  minute: 0,
+  second: 0,
+  currentSecondTime: 0
+};
 
 var Player = /*#__PURE__*/function () {
   function Player(node) {
@@ -200,32 +205,6 @@ var Player = /*#__PURE__*/function () {
 
         _this2.getNews();
       });
-    }
-  }, {
-    key: "playSong",
-    value: function playSong() {
-      this.audio.play();
-      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
-      this.$('.btn-play-pause').classList.remove('pause');
-      this.$('.btn-play-pause').classList.add('playing');
-      this.loadLyricStartTime();
-
-      if (_pauseSong === true) {
-        _pauseSong = false;
-        this.lyricMove(saveLyricTime);
-        return;
-      }
-
-      this.lyricMove();
-    }
-  }, {
-    key: "pauseSong",
-    value: function pauseSong() {
-      _pauseSong = true;
-      this.audio.pause();
-      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
-      this.$('.btn-play-pause').classList.remove('playing');
-      this.$('.btn-play-pause').classList.add('pause');
     }
   }, {
     key: "lyricMove",
@@ -275,53 +254,6 @@ var Player = /*#__PURE__*/function () {
 
         _this3.setLineToCenter($1('.currentLyric'));
       }, 100);
-    }
-  }, {
-    key: "bind",
-    value: function bind() {
-      var self = this;
-      console.log(this);
-
-      this.$('.btn-play-pause').onclick = function () {
-        if (this.classList.contains('playing')) {
-          self.pauseSong();
-        } else if (this.classList.contains('pause')) {
-          self.playSong();
-        }
-      };
-
-      this.$('.btn-pre').onclick = function () {
-        if (self.currentIndex <= self.songList.length - 1 && self.currentIndex > 0) {
-          self.audio.src = self.songList[self.currentIndex -= 1].url;
-        } else {
-          self.currentIndex = self.songList.length - 1;
-          self.audio.src = self.songList[self.currentIndex].url;
-        }
-
-        nextSong = true;
-        clearLyricMoving = true;
-        self.getNews();
-        setTimeout(function () {
-          self.playSong();
-        }, 110);
-      };
-
-      this.$('.btn-next').onclick = function () {
-        if (self.currentIndex < self.songList.length - 1) {
-          self.audio.src = self.songList[self.currentIndex += 1].url;
-        } else {
-          self.currentIndex = 0;
-          self.audio.src = self.songList[self.currentIndex].url;
-        }
-
-        nextSong = true;
-        clearLyricMoving = true;
-        self.getNews();
-        setTimeout(function () {
-          self.playSong();
-        }, 110);
-        console.log(self.songList[self.currentIndex].title);
-      };
     }
   }, {
     key: "getNews",
@@ -390,24 +322,119 @@ var Player = /*#__PURE__*/function () {
       };
     }
   }, {
+    key: "playSong",
+    value: function playSong() {
+      this.audio.play();
+      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-pause');
+      this.$('.btn-play-pause').classList.remove('pause');
+      this.$('.btn-play-pause').classList.add('playing');
+
+      if (_pauseSong === true) {
+        _pauseSong = false;
+        this.lyricMove(saveLyricTime);
+        this.loadLyricStartTime(saveLyricStartTime);
+        return;
+      }
+
+      this.loadLyricStartTime();
+      this.lyricMove();
+    }
+  }, {
+    key: "pauseSong",
+    value: function pauseSong() {
+      _pauseSong = true;
+      this.audio.pause();
+      this.$('.btn-play-pause').querySelector('use').setAttribute('xlink:href', '#icon-play');
+      this.$('.btn-play-pause').classList.remove('playing');
+      this.$('.btn-play-pause').classList.add('pause');
+    }
+  }, {
+    key: "bind",
+    value: function bind() {
+      var self = this;
+      console.log(this);
+
+      this.$('.btn-play-pause').onclick = function () {
+        if (this.classList.contains('playing')) {
+          self.pauseSong();
+        } else if (this.classList.contains('pause')) {
+          self.playSong();
+        }
+      };
+
+      this.$('.btn-pre').onclick = function () {
+        if (self.currentIndex <= self.songList.length - 1 && self.currentIndex > 0) {
+          self.audio.src = self.songList[self.currentIndex -= 1].url;
+        } else {
+          self.currentIndex = self.songList.length - 1;
+          self.audio.src = self.songList[self.currentIndex].url;
+        }
+
+        nextSong = true;
+        clearLyricMoving = true;
+        self.getNews();
+        setTimeout(function () {
+          self.playSong();
+        }, 110);
+      };
+
+      this.$('.btn-next').onclick = function () {
+        if (self.currentIndex < self.songList.length - 1) {
+          self.audio.src = self.songList[self.currentIndex += 1].url;
+        } else {
+          self.currentIndex = 0;
+          self.audio.src = self.songList[self.currentIndex].url;
+        }
+
+        nextSong = true;
+        clearLyricMoving = true;
+        self.getNews();
+        setTimeout(function () {
+          self.playSong();
+        }, 110);
+        console.log(self.songList[self.currentIndex].title);
+      };
+    }
+  }, {
     key: "loadLyricStartTime",
-    value: function loadLyricStartTime() {
+    value: function loadLyricStartTime(Time) {
       var _this6 = this;
 
       // 当前歌曲时间
-      var startTime = 0;
+      // console.log(Time)
       var minute = 0;
       var second = 0;
       var currentSecondTime = 0;
-      var goingTime = setInterval(function () {
-        startTime += 1;
-        currentSecondTime += 1;
-        second = startTime;
 
-        if (startTime > 60) {
+      if (Time) {
+        minute = Time.minute;
+        second = Time.second;
+        currentSecondTime = Time.currentSecondTime;
+      }
+
+      var x = 0;
+      var goingTime = setInterval(function () {
+        x += 1;
+
+        if (_pauseSong === true) {
+          saveLyricStartTime = {
+            minute: minute,
+            second: second,
+            currentSecondTime: currentSecondTime
+          };
+          clearInterval(goingTime);
+          return;
+        }
+
+        if (x === 10) {
+          x = 0;
+          second += 1;
+          currentSecondTime += 1;
+        }
+
+        if (second > 60) {
           minute += 1;
           second = 0;
-          startTime = 0;
         }
 
         var currentTime = "".concat(minute.toString().padStart(2, '0'), ":").concat(second.toString().padStart(2, '0')); // console.log(currentTime)
@@ -425,7 +452,7 @@ var Player = /*#__PURE__*/function () {
           nextSong = false;
           clearInterval(goingTime);
         }
-      }, 1000);
+      }, 100);
     }
   }, {
     key: "secondChangeMinSec",
