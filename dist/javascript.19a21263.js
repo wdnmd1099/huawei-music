@@ -171,7 +171,8 @@ var Player = /*#__PURE__*/function () {
     value: function start() {
       var _this2 = this;
 
-      fetch('https://karr.top/music-data/music-data/music-data.json').then(function (res) {
+      // https://karr.top/music-data/music-data/music-data.json
+      fetch('https://music-data-1300042530.cos-website.ap-guangzhou.myqcloud.com/').then(function (res) {
         return res.json();
       }).then(function (data) {
         _this2.songList = data;
@@ -287,6 +288,7 @@ var Player = /*#__PURE__*/function () {
 
       this.$('.page-effects').ontouchstart = function (e) {
         startX = e.touches[0].pageX;
+        console.log(startX);
       };
 
       this.$(".page-effects").ontouchmove = function (e) {
@@ -314,6 +316,8 @@ var Player = /*#__PURE__*/function () {
           }
         }, 100);
       };
+
+      console.log('shit');
     }
   }, {
     key: "setLineToCenter",
@@ -444,7 +448,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64552" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60346" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

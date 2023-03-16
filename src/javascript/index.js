@@ -15,7 +15,8 @@ class Player {
     }
 
     start() {
-        fetch('https://karr.top/music-data/music-data/music-data.json')
+        // https://karr.top/music-data/music-data/music-data.json
+        fetch('https://music-data-1300042530.cos-website.ap-guangzhou.myqcloud.com/')
             .then(res => res.json())
             .then(data => {
                 this.songList = data
@@ -90,6 +91,7 @@ class Player {
             })
     }
     swiper() {
+        
         let startX;
         let endX;
         let clock;
@@ -97,6 +99,7 @@ class Player {
 
         this.$('.page-effects').ontouchstart = function (e) {
             startX = e.touches[0].pageX
+            console.log(startX)
         }
         this.$(".page-effects").ontouchmove = function (e) {
             if (clock) //假如clock存在
@@ -116,7 +119,7 @@ class Player {
                 }
             }, 100);
         };
-
+        console.log('shit')
     }
 
     setLineToCenter(node) {
